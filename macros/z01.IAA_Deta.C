@@ -536,9 +536,9 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 					// Signal x:eta y:phi
 					hDeltaEta[idtyp][ic][iptt][ipta] = (TH1D*)hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(Form("hDeltaEtaType%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta),phil,phih); // phi near
 					TString label;
-					label += Form(" %2.1f<p_{Tt}<%2.1f, "	,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2] );
+					label += Form(" %2.1f<p_{Tt}<%2.1f"	,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2] );
 					label += Form(" #times %2.1f<p_{Ta}<%2.1f, ", (*AssocPtBorders[AA])[ipta+1],(*AssocPtBorders[AA])[ipta+2]);	 
-					if(idtyp==AA) label += Form(" %2.0f-%2.0f%%",(*CentBinBorders[AA])[ic+1], (*CentBinBorders[AA])[ic+2] );	
+					if(idtyp==AA) label += Form("%2.0f-%2.0f%%",(*CentBinBorders[AA])[ic+1], (*CentBinBorders[AA])[ic+2] );	
 					if(idtyp==pp) label += "pp";	
 					hDeltaEta[idtyp][ic][iptt][ipta]->SetTitle(label);
 				} // pta
