@@ -594,7 +594,9 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 			} // cent
 		} // type 
 		fout->cd();
-		//WriteJCard(fin[AA],fout);
+		CentBinBorders[AA]->Write("CentBinBorders");
+	    TriggPtBorders[AA]->Write("TriggPtBorders");
+        AssocPtBorders[AA]->Write("AssocPtBorders");
 		fout->Close();
 	}
 
