@@ -47,8 +47,6 @@ double highIAA = 2.;
 
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
-Bool_t bPrintFigs = kTRUE;
-
 
 
 
@@ -67,10 +65,6 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	TriggPtBorders             = (TVector*) fin->Get("TriggPtBorders");
 	AssocPtBorders             = (TVector*) fin->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin->Get("CentBinBorders");
-
-
-	int saveRoot = 1;  
-	// for merging mixed event
 
 	int NumCent[2]    = { CentBinBorders->GetNoElements()-1, 1}; 
 	int NumPtt     = TriggPtBorders->GetNoElements()-1;
@@ -127,7 +121,7 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(0,bg/10.,bg*4.);
 					fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(1,2e-3,100);
 					fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(3,2e-3,10);
-					TString opt = (bPrintFigs) ? "RNQ" : "RN";
+					TString opt = "RN";
 					hFlipDeta->Fit((TF1*) fKaplan[idtyp][ic][iptt][ipta],opt);
 					bg         = fKaplan[idtyp][ic][iptt][ipta]->GetParameter(0);
 					double ebg = fKaplan[idtyp][ic][iptt][ipta]->GetParError(0);
@@ -164,6 +158,8 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	DrawSignal(iPTT, iPTA);
 }
 
+//------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
 void DrawSignal(int iPTT, int iPTA) {
 	lowx = -0.01;
 	for(int ic=0;ic<NC;ic++) {
@@ -204,6 +200,7 @@ void DrawSignal(int iPTT, int iPTA) {
 	}
 }
 
+//------------------------------------------------------------------------------------------------
 void DrawAfterFlip(int iPTT, int iPTA) {
 	lowx = -0.01;
 	for(int ic=0;ic<NC;ic++) {
@@ -246,6 +243,7 @@ void DrawAfterFlip(int iPTT, int iPTA) {
 	}
 }
 
+//------------------------------------------------------------------------------------------------
 void DrawBeforeFlip(int iPTT, int iPTA) {
 	for(int ic=0;ic<NC;ic++) {
 		Filipad *fpad = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NC);
@@ -287,6 +285,7 @@ void DrawBeforeFlip(int iPTT, int iPTA) {
 	}
 }
 
+//------------------------------------------------------------------------------------------------
 TH1D *Flip(TH1D* hin, int idtyp){
 	int nb  = hin->GetNbinsX();
 	double max = hin->GetBinLowEdge(nb+1);
@@ -309,16 +308,17 @@ TH1D *Flip(TH1D* hin, int idtyp){
 	return hFlip;
 }
 
+//------------------------------------------------------------------------------------------------
 double FitGeneralizedGaus(double *x, double *par) {
 	return par[2]*par[0]/(2*par[1]*TMath::Gamma(1/par[0]))*TMath::Exp(-TMath::Power(TMath::Abs(x[0])/par[1], par[0]));
 }
 
-
+//------------------------------------------------------------------------------------------------
 double FitGeneralizedGausPlusBG(double *x, double *par) {
 	return FitGeneralizedGaus(x, par) + par[3];
 }
 
-//----------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------
 double FitKaplan(double *x, double *par){  //Fit Deta near with const + Kaplan
 	double deta = x[0];
 	double bg   = par[0];
@@ -347,60 +347,3 @@ TH1D* SubtractBg(TH1D *h, double bg, double ebg){
 
 	return hsig;
 }
-
-
-TGraphErrors* get_ratio( TGraphErrors * l, TGraphErrors *r ){
-	TGraphErrors * gr_ratio = new TGraphErrors( l->GetN() );
-	TGraph ger( r->GetN(), r->GetX(), r->GetEY() );
-	for( int i=0; i< l->GetN(); i++ ){
-		double x = l->GetX()[i];
-		double y1 = l->GetY()[i];
-		double ey1 = l->GetEY()[i];
-		double y2 = r->Eval(x);
-		double ey2 = ger.Eval(x);
-
-		double ratio = y1 / y2; 
-		gr_ratio->SetPoint( i,  x, ratio);
-		gr_ratio->SetPointError( i,  0, ratio*TMath::Sqrt( ey1*ey1/y1/y1+ey2*ey2/y2/y2));
-	}   
-	return gr_ratio;
-}
-
-void SaveCanvas(TString name, TDirectory * dir=0 ){
-	//pPrint("figs/"+name,gPad->GetCanvas()->GetName());
-	//ppdf("figs.zMixCut3/"+name,gPad->GetCanvas());
-	TDirectory *odir = gDirectory;
-	name.ReplaceAll(".", "o");
-	if( dir ) dir->cd();
-	gPad->GetCanvas()->Write("figs/"+name );
-	odir->cd();
-}
-
-
-void RemovePoints(TGraphErrors *ge , double xhigh)
-{
-	// Remove zero points from TGraphErrors.
-
-	if(!ge){return;}
-
-	Int_t nPoints = ge->GetN();
-	Double_t x = 0.; 
-	Double_t y = 0.; 
-	int p =0; 
-	while(p<nPoints) {
-		ge->GetPoint(p,x,y);
-		if( x < 0.21 || x>xhigh  )
-			//if( x < 0.21  )
-		{   
-			ge->RemovePoint(p);
-			//cout<<Form(" WARNING (%s): point %d is < 1.e-10 and it was removed from the plot !!!!",ge->GetName(),p+1)<<endl;
-			nPoints = ge->GetN();
-		} else {
-			p++;
-		}   
-	} // end of for(Int_t p=0;p<nPoints;p++)
-
-	//cout<<endl;
-	return;
-
-} // end of void RemoveZeroPoints(TGraphErrors *ge)
