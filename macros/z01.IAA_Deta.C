@@ -32,6 +32,11 @@ TH1D *hTriggPtBinVtx[2][kCENT][kZvtx][kMAXD];
 TFile *fin[2];
 TFile *fmix;
 TF2 *g2D;
+// adding DeltaEta histograms after mixed event corrections
+// with $\Delta\phi$ < 0.2 ??? check
+TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // filipp summed DeltaEta AA-1 pp-0
+// save this into an additional root file, fit and IAA will be calculated in z02.CalIAADeta.C
+Bool_t saveDeta = kTRUE;
 
 
 void run(){
@@ -72,19 +77,12 @@ void run(){
 
 void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString oname=""){
 
-	int drawYield = 0;
-	int drawIAA = 1;
-	int draw2D = 0;
-	int drawWingCorr=0;
 	int applyWingCorrection = 0;
 	int doMixMerge = 1;
 	int takeMixExt = 0;
 	int correctMix = 1;
 	double mixptt = 4.0, mixpta = 3.0;
 	// this is just a cross check
-	int subtractflow = 0;
-
-	if(subtractflow==1) cout <<"WARNING.... This is just for a test, if you don't know what you are doung here, Please disable subtractflow!!!!!"<<endl;
 
 	enum fillType { kReal, kMixed, kSignal };
 	enum dataType { AA, pp };
@@ -137,7 +135,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	int logy = 1;
 	int plotPythia = 1;
 	int plotIAA = 1;
-	int saveRoot = 0;  TString prefix = "sysErrors/";
+	int saveRoot = 1;  
+	TString prefix = "sysErrors/";
 	double ymin1 = 1e-3; //1e-3; 
 	double ymax1 = subtract==0 ? 1e4 : 20; //40;
 	double ymax2 = subtract==0 ? 35 : 6;  //35 150
@@ -411,7 +410,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	//--------------------------------------------------------------
 	// calculating a weighted average
 	//--------------------------------------------------------------
-	cout <<"Calculating the weighted average.."<<endl;
+	cout <<"Calculating the weighted average.. over zvertex bins"<<endl;
+	// Normalized per trigger yields
 	// AA
 	for(int idtyp=0; idtyp<1; idtyp++){ // 0 = AA, 1 = pp
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
@@ -436,21 +436,6 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 						double bw = hWingCorrection[idtyp][ic][iptt][ipta]->GetBinWidth(1);
 						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*1.6/bw/WingNorm);
 						if(applyWingCorrection && idtyp==AA) ApplyWingCorrection(hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], hWingCorrection[idtyp][ic][iptt][ipta]);
-						//Flow Background for eta gap in \Delta\phi
-						// forward and backward TODO 
-						int etal = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetXaxis()->FindBin(bgnEta[0]);
-						int etah = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetXaxis()->FindBin(bgnEta[1]);
-						int etalm = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetXaxis()->FindBin(-bgnEta[1]);
-						int etahm = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetXaxis()->FindBin(-bgnEta[0]);
-						int Netabins = etah-etal+1 + etahm-etalm+1;
-						hname = Form("hFlowBackground%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
-						TH1D *hphiP, *hphiM;
-						hphiP = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionY(hname.Data(),etal,etah);
-						hphiM = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionY("hphiM",etalm,etahm);
-						hFlowBackground[ic][iptt][ipta] = (TH1D*) hphiP->Clone();
-						hFlowBackground[ic][iptt][ipta]->Add(hphiM);
-						hFlowBackground[ic][iptt][ipta]->Scale(1./Netabins);
-						if(subtractflow) SubtracFlowBackground(hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta],hFlowBackground[ic][iptt][ipta]);
 					}	
 				}
 			}
@@ -484,7 +469,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 		}
 	}
 
-	cout <<"Calculating Signal yields.."<<endl;
+	cout <<"Calculating Signal yields.. for integrated IAA.."<<endl;
 	// Now calcuate yields
 	for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
@@ -507,8 +492,6 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 					}
 					//if(ic==4) IntegralForpp( hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], sgnEta, bgnEta[0], BckYield, eBckYield, BckYield_Area );
 
-					if(subtractflow) IntegralForpp( hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], sgnEta, bgnEta[0], BckYield, eBckYield, BckYield_Area );
-
 					double dpt = ((*AssocPtBorders[AA])[ipta+2]-(*AssocPtBorders[AA])[ipta+1]);
 					double nearMixedEventRatio = 1.;
 
@@ -527,7 +510,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 						BackgroundYieldpp[iptt][ipta] = NormBckYield; eBackgroundYieldpp[iptt][ipta] = eBckYield * NearEtaBinNorm * bckScale ; 
 						SignalYieldpp[iptt][ipta] = SignalYield; eSignalYieldpp[iptt][ipta] = eSignalYield;
 					}
-					if(subtractflow&&idtyp==AA){
+					if(idtyp==AA){
 						h2DIAA[ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Clone();
 						h2DIAA[ic][iptt][ipta]->Divide(hDphiAssoc2DIAA[pp][kSignal][0][iptt][ipta]);
 						int etal = h2DIAA[ic][iptt][ipta]->GetXaxis()->FindBin(-0.4);
@@ -541,6 +524,23 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 			} // ptt 
 		} // cent
 	} // type 
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	cout <<"Calculating DeltaEta, just projection "<<endl;
+	for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
+		for(int ic=0; ic<NumCent[idtyp]; ic++){
+			for(int iptt=0; iptt<NumPtt; iptt++){
+				ntrigg = hTriggPtBin[idtyp][ic][iptt]->Integral();
+				for(int ipta=0;ipta<NumPta;ipta++) {
+					int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1-0.2);
+					int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1+0.2);
+					// Signal
+					double dpt = ((*AssocPtBorders[AA])[ipta+2]-(*AssocPtBorders[AA])[ipta+1]);
+					hDeltaEta[idtyp][ic][iptt][ipta] = (TH1D*)hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(Form("hDeltaEtaType%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta),phil,phih); // phi near
+				} // pta
+			} // ptt 
+		} // cent
+	} // type 
+
 
 	// Make TGraphs , yield and IAA
 	cout <<"Making graphs of yields and IAA..."<<endl;
@@ -567,354 +567,12 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 			grIAA[ic][iptt] = get_ratio(grSignalYieldAA[ic][iptt],grSignalYieldpp[iptt]);
 		}
 	}
-
-	// From here, only drawing....
-	double x1 = 0.3, x2=30;
-	TLine *l = new TLine(x1,1,x2,1); l->SetLineStyle(2); 
-
-	// ALICE PRL Paper
-	// Near-side, 0-5% Pb-Pb/pp, eta-gap:
-	const int NCC =  4 ; 
-	double pta[NCC] = {3.50, 5.00, 7.00, 9.00};
-	double IAA[NCC] = {1.25, 1.22, 1.09, 1.30};
-	double epta[NCC] = {0.07, 0.04, 0.05, 0.09};
-	double estatIAA[NCC] = {0.07, 0.04, 0.05, 0.09};
-	double esysIAA[NCC] = {0.09, 0.09, 0.08, 0.09};
-	double eIAA[NCC] = {0.16,0.13,0.13,0.18};
-	TGraphErrors *grDataIAAnear = new TGraphErrors(NCC, pta, IAA, epta, estatIAA);
-	grDataIAAnear->SetMarkerStyle(28);
-	TGraphErrors *grDataIAAnearsys = new TGraphErrors(NCC, pta, IAA, epta, esysIAA);
-	grDataIAAnearsys->SetFillStyle(1004);
-	grDataIAAnearsys->SetFillColor(kGreen);
-
-
-	double sSize = 0.8;
-	sdx = 250;
-	int sdy = 200;
-	int nchop = NPTT;
-	int irow = -1;
-	int icol = 0;
-	int iCan = 0;
-
-	if(drawYield) {
-		irow++;icol=1;
-		for(int iptt=0;iptt<NPTT;iptt++) {
-			mc(irow*nchop+icol++,sSize, sdx,sdy, NPTT); 
-			gStyle->SetOptStat(0); gStyle->SetOptTitle(0);
-			gStyle->SetMarkerSize(1.6);
-			gPad->SetLogy(1);  gPad->SetGridx(0);
-			gPad->SetLogx(0);
-			gPad->SetLeftMargin(0.17);
-			TH2F *hfr = new TH2F("hfr"," ", 10, lpta, hpta , 10, ymin1, 2e2);
-			hset( *hfr, "p_{T,assoc} [GeV/c]","1/N_{trigg} dN_{2}/dp_{T,assoc}");
-			hfr->Draw();
-			grInclYieldAA[0][iptt]->SetMarkerStyle(20);
-			grInclYieldAA[0][iptt]->SetMarkerColor(2);
-			grInclYieldAA[0][iptt]->Draw("psame");
-			grInclYieldAA[icbin[1]][iptt]->SetMarkerStyle(21);
-			grInclYieldAA[icbin[1]][iptt]->SetMarkerColor(4);
-			grInclYieldAA[icbin[1]][iptt]->Draw("psame");
-			grInclYieldpp[iptt]->SetMarkerStyle(22);
-			grInclYieldpp[iptt]->SetMarkerColor(1);
-			grInclYieldpp[iptt]->Draw("psame");
-
-			grBckYieldAA[0][iptt]->SetMarkerStyle(24);
-			grBckYieldAA[0][iptt]->SetMarkerColor(2);
-			grBckYieldAA[0][iptt]->SetLineColor(2);
-			grBckYieldAA[0][iptt]->Draw("lpsame");
-			grBckYieldAA[icbin[1]][iptt]->SetMarkerStyle(25);
-			grBckYieldAA[icbin[1]][iptt]->SetMarkerColor(4);
-			grBckYieldAA[icbin[1]][iptt]->SetLineColor(4);
-			grBckYieldAA[icbin[1]][iptt]->Draw("lpsame");
-			grBckYieldpp[iptt]->SetMarkerStyle(26);
-			grBckYieldpp[iptt]->SetMarkerColor(1);
-			grBckYieldpp[iptt]->SetLineColor(1);
-			grBckYieldpp[iptt]->Draw("lpsame"); //
-
-			TString strigg = Form(" %2.1f<p_{Tt}<%2.1f, R<%.1f "   ,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2], sgnEta );
-			TLegend *leg = new TLegend(0.5, 0.65, 0.88, 0.90,strigg,"brNDC");
-			leg->SetFillStyle(0);leg->SetBorderSize(0);leg->SetTextSize(0.04);
-			leg->AddEntry(grInclYieldAA[0][iptt],"0-10%","p");
-			leg->AddEntry(grInclYieldAA[icbin[1]][iptt],"60-90%","p");
-			leg->AddEntry(grInclYieldpp[iptt],"pp","p");
-			leg->Draw();
-			gPad->GetCanvas()->Update();
-			SaveCanvas(Form("InclYield_iptt%02d_%s", iptt, oname.Data() ));
-		}
-
-		// Signal only
-		irow++;icol=1;
-		for(int iptt=0;iptt<NPTT;iptt++) {
-			mc(irow*nchop+icol++,sSize, sdx, sdy, nchop); 
-			gStyle->SetOptStat(0); gStyle->SetOptTitle(0);
-			gStyle->SetMarkerSize(1.6);
-			gPad->SetLogy(1);  gPad->SetGridx(0);
-			gPad->SetLogx(0);
-			gPad->SetLeftMargin(0.17);
-			TH2F *hfr = new TH2F("hfr"," ", 10, lpta, hpta , 10, ymin1, 2e2);
-			hset( *hfr, "p_{T,assoc} [GeV/c]","1/N_{trigg} dN_{2}/dp_{T,assoc}");
-			hfr->Draw();
-			grSignalYieldAA[0][iptt]->SetMarkerStyle(24);
-			grSignalYieldAA[0][iptt]->SetMarkerSize(1.5);
-			grSignalYieldAA[0][iptt]->SetMarkerColor(2);
-			grSignalYieldAA[0][iptt]->Draw("psame");
-			grSignalYieldAA[icbin[1]][iptt]->SetMarkerStyle(28);
-			grSignalYieldAA[icbin[1]][iptt]->Draw("psame");
-			grSignalYieldpp[iptt]->SetMarkerSize(1.5);
-			grSignalYieldpp[iptt]->SetMarkerStyle(30);
-			grSignalYieldpp[iptt]->SetMarkerColor(1);
-			grSignalYieldpp[iptt]->Draw("psame");
-
-
-			TString strigg = Form(" %2.1f<p_{Tt}<%2.1f, R<%.1f "   ,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2], sgnEta );
-			TLegend *leg = new TLegend(0.4, 0.65, 0.88, 0.90,strigg,"brNDC");
-			leg->SetFillStyle(0);leg->SetBorderSize(0);leg->SetTextSize(0.04);
-			leg->AddEntry(grSignalYieldAA[0][iptt],"0-10%","p");
-			leg->AddEntry(grSignalYieldAA[icbin[1]][iptt],"60-90%","p");
-			leg->AddEntry(grSignalYieldpp[iptt],"pp","p");
-
-			leg->Draw();
-			gPad->GetCanvas()->Update();
-			SaveCanvas(Form("grSignalcmp_mixPTT%02d_R%.1f_S%.1f_%s",  iptt,    bgnEta[0],    bckScale,oname.Data()));
-		}
-	}
-
-	if( drawIAA ){
-		irow++;icol=1;
-		for(int iptt=0;iptt<NPTT;iptt++) {
-			mc(irow*nchop+icol++,sSize, sdx, sdy, nchop); 
-			gStyle->SetOptStat(0); gStyle->SetOptTitle(0);
-			gStyle->SetMarkerSize(1.6);
-			gPad->SetLogy(0);  gPad->SetGridx(0);
-			gPad->SetLogx(0);
-			gPad->SetLeftMargin(0.17);
-			TH2F *hfr = new TH2F("hfr"," ", 10, lpta, hpta , 10, 0, hIAA);
-			hset( *hfr, "p_{T,assoc} [GeV/c]","I_{AA}");
-			hfr->Draw();
-			if(plotIAA){
-				grDataIAAnearsys->Draw("2");
-				grDataIAAnear->Draw("p,same");
-			}
-			grIAA[0][iptt]->SetMarkerStyle(20);
-			grIAA[0][iptt]->Draw("psame");
-			grIAA[icbin[1]][iptt]->SetMarkerStyle(24);
-			grIAA[icbin[1]][iptt]->SetMarkerColor(2);
-			grIAA[icbin[1]][iptt]->Draw("psame");
-			TString strigg = Form(" %2.1f<p_{Tt}<%2.1f, R<%.1f "   ,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2], sgnEta );
-			TLegend *leg = new TLegend(0.5, 0.65, 0.88, 0.90,strigg,"brNDC");
-			leg->SetFillStyle(0);leg->SetBorderSize(0);leg->SetTextSize(0.04);
-			TString background = Form("R_{bg} > %2.1f",bgnEta[0]);
-			leg->AddEntry(grIAA[0][iptt],background.Data(),"");
-			leg->AddEntry(grIAA[0][iptt],"0-10%","p");
-			leg->AddEntry(grIAA[icbin[1]][iptt],"60-90%","p");
-			l->Draw();
-
-			if(plotIAA){
-				leg->AddEntry(grDataIAAnear,"ALICE PRL 0-5%","p");
-			}   
-			leg->Draw();
-			gPad->GetCanvas()->Update();
-		}
-	}
-
-	
-	if( draw2D ){
-		int iPTTs[2] = { NPTT-2, NPTT};
-		int iPTAs[2] = { 0, 6};
-		int iTYPs[2] = { 2, 3}; // 0:for 1:mixed 2:signal
-		int iCENTs[2] = { 0, 0};
-
-		int idtyp = 0; // pp=1 or aa=0 
-		irow++;icol=1;
-		nchop = iPTAs[1]-iPTAs[0] + 1;
-		for(int iptt=iPTTs[0]; iptt<iPTTs[1]; iptt++){
-			for(int ipta=iPTAs[0];ipta<iPTAs[1];ipta++) {
-				for(int ityp=iTYPs[0]; ityp<iTYPs[1]; ityp++){
-					//int iCENTs[2] = { 0, NumCent[idtyp] };
-					for(int ic=iCENTs[0]; ic<=iCENTs[1]; ic++){
-						if(ic!=iCENTs[0] && ic!=iCENTs[1]) continue;
-						mc( irow*nchop+icol++ ,sSize, sdx, sdy, nchop);
-						gStyle->SetOptStat(0);gStyle->SetOptTitle(0);
-						gStyle->SetMarkerSize(1.6);
-						gPad->SetLogx(0);gPad->SetGridx(0);
-						gPad->SetLogy(0);gPad->SetGridy(0);
-						gPad->SetLogz(0);
-						gPad->SetLeftMargin(0.17);
-						TString label;
-						label += Form(" %2.0f-%2.0f%%, ",(*CentBinBorders[AA])[ic+1], (*CentBinBorders[AA])[ic+2] );
-						label += Form(" %2.1f<p_{Tt}<%2.1f, "	,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2] );
-						label += Form(" #times %2.1f<p_{Ta}<%2.1f ", (*AssocPtBorders[AA])[ipta+1],(*AssocPtBorders[AA])[ipta+2]);	 	
-
-						TLegend *leg = new TLegend(0.1, 0.85, 0.80, 0.95," ","brNDC");
-						leg->SetFillStyle(0);leg->SetBorderSize(0);leg->SetTextSize(0.04);
-						leg->AddEntry(hDphiAssoc2DIAA[AA][ityp][ic][iptt][ipta],label,"");
-						hDphiAssoc2DIAA[AA][ityp][ic][iptt][ipta]->SetAxisRange(-1.40,1.40,"X");
-						hDphiAssoc2DIAA[AA][ityp][ic][iptt][ipta]->Draw("surf1");
-						gPad->SetTheta(23.31286);
-						gPad->SetPhi(-58.46658);
-
-						leg->Draw();
-						gPad->GetCanvas()->Update();
-						SaveCanvas(Form("2D%02d_C%02dT%02dA%02d_%s",ityp,ic,iptt,ipta,oname.Data()));
-					}
-				}
-			}
-		}
-
-		irow++;icol=1;
-		for(int iptt=iPTTs[0]; iptt<iPTTs[1]; iptt++){
-			for(int ipta=iPTAs[0];ipta<iPTAs[1];ipta++) {
-				for(int ityp=iTYPs[0]; ityp<iTYPs[1]; ityp++){
-					mc( irow*nchop+icol++ ,sSize, sdx, sdy, nchop);
-					gStyle->SetOptStat(0);gStyle->SetOptTitle(0);
-					gStyle->SetMarkerSize(1.6);
-					gPad->SetLogx(0);gPad->SetGridx(0);
-					gPad->SetLogy(0);gPad->SetGridy(0);
-					gPad->SetLogz(0);
-					gPad->SetLeftMargin(0.17);
-					TString label;
-					label += Form(" %2.1f<p_{Tt}<%2.1f, "	,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2] );
-					label += Form(" #times %2.1f<p_{Ta}<%2.1f ", (*AssocPtBorders[AA])[ipta+1],(*AssocPtBorders[AA])[ipta+2]);	 	
-
-					TLegend *leg = new TLegend(0.1, 0.85, 0.80, 0.95," ","brNDC");
-					leg->SetFillStyle(0);leg->SetBorderSize(0);leg->SetTextSize(0.04);
-					leg->AddEntry(hDphiAssoc2DIAA[pp][kReal][0][iptt][ipta],label,"");
-					hDphiAssoc2DIAA[pp][ityp][0][iptt][ipta]->SetAxisRange(-1.40,1.40,"X");
-					hDphiAssoc2DIAA[pp][ityp][0][iptt][ipta]->Draw("surf1");
-					gPad->SetTheta(23.31286);
-					gPad->SetPhi(-58.46658);
-
-					leg->Draw();
-					gPad->GetCanvas()->Update();
-					SaveCanvas(Form("2D%02d_PP_T%02dA%02d_%s",ityp,iptt,ipta,oname.Data()));
-				}
-			}
-		}
-	}
-	if( drawWingCorr ){
-		int iPTTs[2] = { 0, NPTT};
-		int iPTAs[2] = { 0, 5 };
-		int iTYPs[2] = { 2, 3};
-
-		int idtyp = 0; // pp=1 or aa=0 
-		irow++;icol=1;
-		for(int iptt=iPTTs[0]; iptt<iPTTs[1]; iptt++){
-			for(int ityp=iTYPs[0]; ityp<iTYPs[1]; ityp++){
-				int iCENTs[2] = { 0, 4 };
-				for(int ic=iCENTs[0]; ic<iCENTs[1]; ic++){
-					mc( irow*nchop+icol++ ,sSize, sdx, sdy, nchop);
-					gStyle->SetOptStat(0);gStyle->SetOptTitle(0);
-					gStyle->SetMarkerSize(1.6);
-					gPad->SetLogx(0);gPad->SetGridx(0);
-					gPad->SetLogy(0);gPad->SetGridy(0);
-					gPad->SetLeftMargin(0.17);
-					TString label;
-					label += Form(" %2.0f-%2.0f%%, ",(*CentBinBorders[AA])[ic+1], (*CentBinBorders[AA])[ic+2] );
-					label += Form(" %2.1f<p_{Tt}<%2.1f, "	,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2] );
-					TH2F *hfr = new TH2F("hfr"," ", 10, -1.6, 1.6 , 10, 0.95, 1.05);
-					hset( *hfr, "#Delta#eta","|#Delta#phi-#pi|< #frac{#pi}{5}");
-					TLegend *leg = new TLegend(0.15, 0.65, 0.80, 0.90," ","brNDC");
-					leg->SetFillStyle(0);leg->SetBorderSize(0);leg->SetTextSize(0.04);
-					hfr->Draw();
-					leg->AddEntry(hWingCorrection[AA][ic][iptt][0],label,"");
-					for(int ipta=iPTAs[0];ipta<iPTAs[1];ipta++) {
-						hWingCorrection[AA][ic][iptt][ipta]->SetLineColor(ipta+1);
-						hWingCorrection[AA][ic][iptt][ipta]->Draw("same");
-						label = Form(" %2.1f<p_{Ta}<%2.1f ", (*AssocPtBorders[AA])[ipta+1],(*AssocPtBorders[AA])[ipta+2]);	 	
-						leg->AddEntry(hWingCorrection[AA][ic][iptt][ipta],label+"AA","l");
-
-						hWingCorrection[pp][0][iptt][ipta]->SetLineColor(2);
-						//hWingCorrection[pp][0][iptt][ipta]->Draw("same");
-						//leg->AddEntry(hWingCorrection[pp][ic][iptt][ipta],"pp","l");
-						leg->Draw();
-						gPad->GetCanvas()->Update();
-						SaveCanvas(Form("pta_wingCorr_C%02dT%02dA%02d_%s",ic,iptt,ipta,oname.Data()));
-					}
-				}
-			}
-		}
-	}
-
-	if( subtractflow ){
-		int iPTTs[2] = { 0, NPTT};
-		int iPTAs[2] = { 0, 5};
-		int iCENTs[2] = { 0, 1 };
-
-		irow++;icol=1;
-		for(int iptt=iPTTs[0]; iptt<iPTTs[1]; iptt++){
-			for(int ipta=iPTAs[0];ipta<iPTAs[1];ipta++) {
-				//int iCENTs[2] = { 0, NumCent[idtyp] };
-				for(int ic=iCENTs[0]; ic<=iCENTs[1]; ic++){
-					if(ic!=iCENTs[0] && ic!=iCENTs[1]) continue;
-					mc( irow*nchop+icol++ ,sSize, sdx, sdy, nchop);
-					gStyle->SetOptStat(0);gStyle->SetOptTitle(0);
-					gStyle->SetMarkerSize(1.6);
-					gPad->SetLogx(0);gPad->SetGridx(0);
-					gPad->SetLogy(0);gPad->SetGridy(0);
-					gPad->SetLeftMargin(0.17);
-					TString label;
-					label += Form(" %2.0f-%2.0f%%, ",(*CentBinBorders[AA])[ic+1], (*CentBinBorders[AA])[ic+2] );
-					label += Form(" %2.1f<p_{Tt}<%2.1f, "	,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2] );
-					label += Form(" #times %2.1f<p_{Ta}<%2.1f ", (*AssocPtBorders[AA])[ipta+1],(*AssocPtBorders[AA])[ipta+2]);	 	
-
-					TLegend *leg = new TLegend(0.1, 0.85, 0.80, 0.95," ","brNDC");
-					leg->SetFillStyle(0);leg->SetBorderSize(0);leg->SetTextSize(0.04);
-					leg->AddEntry(h2DIAA[ic][iptt][ipta],label,"");
-
-					h2DIAA[ic][iptt][ipta]->SetAxisRange(-0.6,0.6,"X");
-					h2DIAA[ic][iptt][ipta]->SetAxisRange(-0.4,0.3,"Y");
-					h2DIAA[ic][iptt][ipta]->SetAxisRange(0,4,"Z");
-					h2DIAA[ic][iptt][ipta]->SetZTitle("I_{AA}");
-					h2DIAA[ic][iptt][ipta]->Draw("surf1");
-					gPad->SetTheta(23.31286);
-					gPad->SetPhi(-58.46658);
-
-					leg->Draw();
-					gPad->GetCanvas()->Update();
-					SaveCanvas(Form("2DIAA_C%02dT%02dA%02d_%s",ic,iptt,ipta,oname.Data()));
-				}
-			}
-		}
-		irow++;icol=1;
-		for(int iptt=iPTTs[0]; iptt<iPTTs[1]; iptt++){
-			for(int ipta=iPTAs[0];ipta<iPTAs[1];ipta++) {
-				//int iCENTs[2] = { 0, NumCent[idtyp] };
-				for(int ic=iCENTs[0]; ic<=iCENTs[1]; ic++){
-					if(ic!=iCENTs[0] && ic!=iCENTs[1]) continue;
-					mc( irow*nchop+icol++ ,sSize, sdx, sdy, nchop);
-					gStyle->SetOptStat(0);gStyle->SetOptTitle(0);
-					gStyle->SetMarkerSize(1.6);
-					gPad->SetLogx(0);gPad->SetGridx(0);
-					gPad->SetLogy(0);gPad->SetGridy(0);
-					gPad->SetLeftMargin(0.17);
-					TString label;
-					label += Form(" %2.0f-%2.0f%%, ",(*CentBinBorders[AA])[ic+1], (*CentBinBorders[AA])[ic+2] );
-					label += Form(" %2.1f<p_{Tt}<%2.1f, "	,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2] );
-					label += Form(" #times %2.1f<p_{Ta}<%2.1f ", (*AssocPtBorders[AA])[ipta+1],(*AssocPtBorders[AA])[ipta+2]);	 	
-
-					TH2F *hfr = new TH2F("hfr"," ", 10, -0.4, 0.4 , 10, 0, hIAA);
-					hset( *hfr, "#Delta#eta","I_{AA}");
-					hfr->Draw();
-					TLegend *leg = new TLegend(0.1, 0.85, 0.80, 0.95," ","brNDC");
-					leg->SetFillStyle(0);leg->SetBorderSize(0);leg->SetTextSize(0.04);
-					leg->AddEntry(hIAAEta[ic][iptt][ipta],label,"");
-
-					hIAAEta[ic][iptt][ipta]->Draw();
-
-					leg->Draw();
-					gPad->GetCanvas()->Update();
-					SaveCanvas(Form("IAAEta_C%02dT%02dA%02d_%s",ic,iptt,ipta,oname.Data()));
-				}
-			}
-		}
-	}
-
 	// Write down Iaa and yields into a root file
 	if(saveRoot) {
 		cout <<"Writing the results into a file..."<< endl;
 		TFile *fout = new TFile(Form("%s_%s_Iaa_R%.1f_%.1f_%.2f_%s_Wing%d.root",prefix.Data(),oname.Data(),sgnEta,bgnEta[0],bgnEta[1],sidelabel[int(Side)],applyWingCorrection),"recreate");
+		fout->cd();
 		for(int iptt=0;iptt<NPTT;iptt++) {
-			fout->cd();
 			grInclYieldpp[iptt]->Write(Form("grInclYieldpp_%02d",iptt));
 			grBckYieldpp[iptt]->Write(Form("grBckYieldpp_%02d",iptt));
 			grSignalYieldpp[iptt]->Write(Form("grYieldpp_%02d",iptt));
@@ -923,9 +581,18 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 				grBckYieldAA[ic][iptt]->Write(Form("grBckYieldAA_%02d%02d",ic,iptt));
 				grSignalYieldAA[ic][iptt]->Write(Form("grYieldAA_%02d%02d",ic,iptt));
 				grIAA[ic][iptt]->Write(Form("grIAA_%02d%02d",ic,iptt));
-				for(int ipta=0;ipta<NPTA;ipta++) hFlowBackground[ic][iptt][ipta]->Write();
 			}
 		}
+		// Deltaeta
+		for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
+			for(int ic=0; ic<NumCent[idtyp]; ic++){
+				for(int iptt=0; iptt<NumPtt; iptt++){
+					for(int ipta=0;ipta<NumPta;ipta++) {
+						hDeltaEta[idtyp][ic][iptt][ipta]->Write();
+					} // pta
+				} // ptt 
+			} // cent
+		} // type 
 		fout->cd();
 		//WriteJCard(fin[AA],fout);
 		fout->Close();
@@ -1151,13 +818,13 @@ TGraphErrors* get_ratio( TGraphErrors * l, TGraphErrors *r ){
 }
 
 void SaveCanvas(TString name, TDirectory * dir=0 ){
-        //pPrint("figs/"+name,gPad->GetCanvas()->GetName());
-        //ppdf("figs.zMixCut3/"+name,gPad->GetCanvas());
-        TDirectory *odir = gDirectory;
-        name.ReplaceAll(".", "o");
-        if( dir ) dir->cd();
-           gPad->GetCanvas()->Write("figs/"+name );
-        odir->cd();
+	//pPrint("figs/"+name,gPad->GetCanvas()->GetName());
+	//ppdf("figs.zMixCut3/"+name,gPad->GetCanvas());
+	TDirectory *odir = gDirectory;
+	name.ReplaceAll(".", "o");
+	if( dir ) dir->cd();
+	gPad->GetCanvas()->Write("figs/"+name );
+	odir->cd();
 }
 
 
@@ -1223,14 +890,14 @@ void SubtracFlowBackground(TH2D* H, TH1D *hflow){
 
 
 double GetGeoAccCorrFlat(double deltaEta){
-  //FK// calculate acceptance correction on pseudorapidity triangle
-  double absDEta = fabs(deltaEta);
-
-  double denominator = 1 - absDEta/(2*fmaxEtaRange);
-  //double denominator = 1 - (absDEta - ftriggFiducCut)/(2*fmaxEtaRange-2*ftriggFiducCut);//When Fid>0 max_Deta je mensi nez 2*EtaMax
-  //double denominator = 1 - (absDEta - ftriggFiducCut)/(2*fmaxEtaRange-ftriggFiducCut);
-  if(denominator > 1e-6)
-    return 1.0/denominator;
-  else
-    return 0;
+	//FK// calculate acceptance correction on pseudorapidity triangle
+	double absDEta = fabs(deltaEta);
+	double fmaxEtaRange = 0.8;
+	double denominator = 1 - absDEta/(2*fmaxEtaRange);
+	//double denominator = 1 - (absDEta - ftriggFiducCut)/(2*fmaxEtaRange-2*ftriggFiducCut);//When Fid>0 max_Deta je mensi nez 2*EtaMax
+	//double denominator = 1 - (absDEta - ftriggFiducCut)/(2*fmaxEtaRange-ftriggFiducCut);
+	if(denominator > 1e-6)
+		return 1.0/denominator;
+	else
+		return 0;
 }
