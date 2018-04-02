@@ -4,6 +4,7 @@ the main result: the narrowing of dN/dEta in heavy ion collisions
 main analysis macro
 z01.IAA_Deta.C
 z02.CalIAADeta.C
+z03.CompareDeta.C // for general comparison after substraction of the backgrouds
 
 INPUT to the analysis:  jcorran.root file from HI and pp
 

@@ -43,10 +43,11 @@ void run(){
 
 	const int NAA = 1;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_PbPb_CF-5059_20180329-1139_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
+		//"legotrain_JCIaa/data/JCIaa_legotrain_PbPb_CF-5059_20180329-1139_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-924_20180317-0022-AMPT_LHC13f3c.root"
 	};
 	TString commentAA[NAA] = {
-		"AA_moon1"
+		"AMPT_LHC13f3c"
 	};
 
 	const int NPP = 1;
@@ -54,7 +55,7 @@ void run(){
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1677_20180326-1905-2760GeV_LHC11a_p4_AOD113_noSDD.root"
 	};
 	TString commentPP[NPP] = {
-		"pp_moon1"
+		"LHC11a_p4_AOD113_noSDD"
 	};
 
 	// Moon

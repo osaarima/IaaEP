@@ -23,17 +23,17 @@ TH1D *hAssocPtBin[2][kCENT][kMAXD][kMAXD];
 TH1D *hIAAEta[kCENT][kMAXD][kMAXD]; // in eta,phi 
 
 TFile *fin;
-// adding DeltaEta histograms after mixed event corrections
+
 // with $\Delta\phi$ < 0.2 ??? check
 TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // summed DeltaEta AA-0 pp-1
 TH1D *hDeltaEtaFlip[2][kCENT][kMAXD][kMAXD]; // Flip Deta around 0 to positive side
-TH1D *hDeltaEtaSig[2][kCENT][kMAXD][kMAXD]; // background substracted signal
-// save this into an additional root file, fit and IAA will be calculated in z02.CalIAADeta.C
+TH1D *hDeltaEtaSig[2][kCENT][kMAXD][kMAXD]; // background substracted signal based on fit
+// IAA before substraction and after
 TH1D *hIAADeltaEta[kCENT][kMAXD][kMAXD];
 TH1D *hIAADeltaEtaFlip[kCENT][kMAXD][kMAXD];
 TH1D *hIAADeltaEtaSig[kCENT][kMAXD][kMAXD]; // background substracted signal IAA
 
-// Fits
+// Fits only after Fip at this moment
 TF1 *fKaplan[2][kCENT][kMAXD][kMAXD]; // 
 TF1 *fGG[2][kCENT][kMAXD][kMAXD]; //
 
@@ -118,10 +118,10 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					double bg       = hFlipDeta->Integral(hFlipDeta->FindBin(0.4), hFlipDeta->GetNbinsX())/(hFlipDeta->GetNbinsX()-hFlipDeta->FindBin(0.4));
 					double peakAmpl = hFlipDeta->GetBinContent(hFlipDeta->FindBin(0))-bg;
 					fKaplan[idtyp][ic][iptt][ipta]->SetParameters(bg, peakAmpl, 20.0, 1.0);
-					fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(0,bg/10.,bg*4.);
-					fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(1,2e-3,100);
-					fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(3,2e-3,10);
-					TString opt = "RN";
+					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(0,bg/10.,bg*4.);
+					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(1,2e-3,100);
+					//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(3,2e-3,10);
+					TString opt = "QRN";
 					hFlipDeta->Fit((TF1*) fKaplan[idtyp][ic][iptt][ipta],opt);
 					bg         = fKaplan[idtyp][ic][iptt][ipta]->GetParameter(0);
 					double ebg = fKaplan[idtyp][ic][iptt][ipta]->GetParError(0);
