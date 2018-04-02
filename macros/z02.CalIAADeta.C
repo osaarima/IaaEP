@@ -24,7 +24,7 @@ Bool_t saveDeta = kTRUE;
 double lowx=-0.5;
 double highx=0.5;
 double ly = -0.1;
-double hy = 1.0;
+double hy = 0.4;
 double lowIAA = 0.;
 double highIAA = 2.;
 
@@ -99,7 +99,6 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 
 	int iPTT=3;
 	int iPTA=5;
-
 	for(int ic=0;ic<NC;ic++) {
 		Filipad *fpad = new Filipad(ic+1, 1.1, 0.4, 100, 100, 0.7, 5);
 		fpad->Draw();
@@ -156,8 +155,8 @@ TH1D *Flip(TH1D* hin, int idtyp){
 		double valNeg = hin->GetBinContent(nb - ib+1);
 		double errNeg = hin->GetBinError(nb - ib+1);
 
-		hFlip->SetBinContent(ib-zero+1, valPos+valNeg);
-		hFlip->SetBinError(ib-zero+1, sqrt( errPos*errPos + errNeg * errNeg ));
+		hFlip->SetBinContent(ib-zero+1, (valPos+valNeg)/2.0);
+		hFlip->SetBinError(ib-zero+1, sqrt( errPos*errPos + errNeg * errNeg )/2.);
 	}
 
 	return hFlip;
