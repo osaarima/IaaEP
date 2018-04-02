@@ -1,0 +1,68 @@
+ANALYSIS of the dN/dEta  in PbPb and pp 
+the main result: the narrowing of dN/dEta in heavy ion collisions
+
+
+----------------------------------------------------------
+main analysis macro ...... eta_v2_ppzbin.C  (centrality from VZERO) or eta_v2_ppzbin_TPC.C  (centrality from TPC)
+
+INPUT to the analysis:  jcorran.root file from HI and pp
+
+at the moment the reading is "automatized" by switches 
+1) one can choose from  2 set of track cuts
+CUT1 = TPC only cuts
+CUT3 = RAA cuts
+
+2) Increased Contamination  by fake primary track 0 and +- 30%
+
+3) For pp we allow as input with and without SDD
+
+The macro than creates an output file with apropriate output name
+----------------------------------------------------------
+Analysis:
+the near side and away side delta eta distributions are corrected on mixed event
+in z and centrality bins. 
+(above trigger sumTriggBinsForMixAbove    = 6.0; and assoc  sumAssocBinsForMixAbove    = 4.0;
+the mixed event histograms are added together. Assumption is that for high pT straight tracks
+triangle does not change much
+).
+
+the near side Delta eta is corrected for residual wing correction
+
+the bg is estimated with a fit  (peak = kaplan ,  bg =constant)
+
+bg  subtracted 1/Ntrigg * dN/deta are written to output
+
+........................................
+SYSTEMATIC UNCERTAINTIES
+DrawSys_v3_AliceTempl.C  
+
+inputs are outputs from eta_v2_ppzbin.C    
+for vairous setting and the macro combines differences from reference analysis to syst error 
+
+------------------------------------------------------------------------
+DrawFinal3.C   draws the final plots in alice template
+
+
+directories with input root files :
+
+PbPb_CUT1
+PbPb_CUT1_MINUS
+PbPb_CUT1_PLUS
+PbPb_CUT1_centTPC
+PbPb_CUT1_centZDC
+PbPb_CUT3
+
+plots for QM:
+QM_PRELIM_PLOTS
+
+
+to abbrevaitations  
+GGC == fit bg with gaus+gaus+const
+KC == fit kaplan + constant
+
+
+
+
+
+
+
