@@ -17,9 +17,11 @@ TFile *fin;
 // adding DeltaEta histograms after mixed event corrections
 // with $\Delta\phi$ < 0.2 ??? check
 TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // summed DeltaEta AA-0 pp-1
-// save this into an additional root file, fit and IAA will be calculated in z02.CalIAADeta.C
 TH1D *hDeltaEtaFlip[2][kCENT][kMAXD][kMAXD]; // Flip Deta around 0 to positive side
+// save this into an additional root file, fit and IAA will be calculated in z02.CalIAADeta.C
 TH1D *hIAADeltaEta[kCENT][kMAXD][kMAXD];
+TH1D *hIAADeltaEtaFlip[kCENT][kMAXD][kMAXD];
+
 Bool_t saveDeta = kTRUE;
 double lowx=-0.5;
 double highx=0.5;
@@ -90,17 +92,19 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	for(int ic=0; ic<NumCent[AA]; ic++){
 		for(int iptt=0; iptt<NPTT; iptt++){
 			for(int ipta=0;ipta<NPTA;ipta++) {
-				hIAAEta[ic][iptt][ipta] = (TH1D*)hDeltaEta[AA][ic][iptt][ipta]->Clone();
-				hIAAEta[ic][iptt][ipta]->Divide(hDeltaEta[pp][0][iptt][ipta]);
+				hIAADeltaEta[ic][iptt][ipta] = (TH1D*)hDeltaEta[AA][ic][iptt][ipta]->Clone();
+				hIAADeltaEta[ic][iptt][ipta]->Divide(hDeltaEta[pp][0][iptt][ipta]);
+				hIAADeltaEtaFlip[ic][iptt][ipta] = (TH1D*)hDeltaEtaFlip[AA][ic][iptt][ipta]->Clone();
+				hIAADeltaEtaFlip[ic][iptt][ipta]->Divide(hDeltaEtaFlip[pp][0][iptt][ipta]);
 			} // iptt 
 		} // ic
 	}
 
 
 	int iPTT=3;
-	int iPTA=5;
+	int iPTA=4;
 	for(int ic=0;ic<NC;ic++) {
-		Filipad *fpad = new Filipad(ic+1, 1.1, 0.4, 100, 100, 0.7, 5);
+		Filipad *fpad = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NumCent[AA]);
 		fpad->Draw();
 		//==== Upper pad
 		TPad *p = fpad->GetPad(1); //upper pad
@@ -134,8 +138,10 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, lowIAA, highIAA);
 		hset( *hfr1, "#Delta#eta", "AA/pp",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
 		hfr1->Draw();
-		hIAAEta[ic][iPTT][iPTA]->SetMarkerStyle(20);
-		hIAAEta[ic][iPTT][iPTA]->Draw("p,same");
+		hIAADeltaEta[ic][iPTT][iPTA]->SetMarkerStyle(20);
+		hIAADeltaEta[ic][iPTT][iPTA]->Draw("p,same");
+		hIAADeltaEtaFlip[ic][iPTT][iPTA]->SetMarkerStyle(24);
+		hIAADeltaEtaFlip[ic][iPTT][iPTA]->Draw("p,same");
 		//gPad->GetCanvas()->SaveAs(Form("figs_svn/FigA4_v%d_modelcomparisonBest.eps",i+2));
 	}
 }
@@ -147,7 +153,7 @@ TH1D *Flip(TH1D* hin, int idtyp){
 	TString hname = hin->GetName();
 	TString newName = Form("%s_flip%d",hname.Data(),idtyp);
 
-	TH1D *hFlip = new TH1D(newName.Data(), newName.Data(), (int) nb/2, 0, max);
+	TH1D *hFlip = new TH1D(newName.Data(), newName.Data(), (int) nb/2., 0, max);
 	int zero = hin->FindBin(0.00001);
 	for(int ib=zero; ib<=nb; ib++){
 		double valPos = hin->GetBinContent(ib);
