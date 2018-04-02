@@ -1,4 +1,4 @@
-void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString oname="");
+void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString dirAA="",TString oname="");
 Double_t Gaus2D(Double_t *x, Double_t *par);
 void ApplyWingCorrection(TH2D* H, TH1D *hcorr);
 void SubtracFlowBackground(TH2D* H, TH1D *hflow);
@@ -41,12 +41,31 @@ Bool_t saveDeta = kTRUE;
 
 void run(){
 
-	const int NAA = 1;
+	const int NAA = 6;
 	TString fileAA[NAA] = {
 		//"legotrain_JCIaa/data/JCIaa_legotrain_PbPb_CF-5059_20180329-1139_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-924_20180317-0022-AMPT_LHC13f3c.root"
+		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-924_20180317-0022-AMPT_LHC13f3c.root"
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-939_20180331-0130-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-939_20180331-0130-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-940_20180331-0131-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-940_20180331-0131-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-938_20180331-0111-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-938_20180331-0111-AMPT_LHC13f3c.root"
+	};
+	TString dirAA[NAA] = {
+		"JCIAA_V0A_E00",
+		"JCIAA_V0A_E90",
+		"JCIAA_V0P_E00",
+		"JCIAA_V0P_E90",
+		"JCIAA_TPC_E00",
+		"JCIAA_TPC_E90"
 	};
 	TString commentAA[NAA] = {
+		"AMPT_LHC13f3c",
+		"AMPT_LHC13f3c",
+		"AMPT_LHC13f3c",
+		"AMPT_LHC13f3c",
+		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c"
 	};
 
@@ -62,13 +81,12 @@ void run(){
 	const int NR = 1;
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
-	//double BgRbegin[6] = {1.0,1.1,1.2,1.3,1.4};
 	int NBG=1;
 	for(int iA=0;iA<NAA;iA++) {
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
-					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],commentAA[iA]+"_"+commentPP[iP] );
+					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],commentAA[iA]+"_"+commentPP[iP] );
 				}
 			}
 		}
@@ -76,7 +94,7 @@ void run(){
 }
 
 
-void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString oname=""){
+void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString dirAA, TString oname=""){
 
 	int applyWingCorrection = 0;
 	int doMixMerge = 1;
@@ -97,7 +115,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	fin[pp] = TFile::Open(ppInFile);
 	//fmix = new TFile("mergedmixDJ_Cut1.root","read");
 
-	TString TopDir[2] = {"JCIAA_TPCOnly_H0_T0","JCIAA_GlobalSDD_H0_T0"};
+	TString TopDir[2] = {dirAA,"JCIAA_GlobalSDD_H0_T0"};
+	cout << TopDir[0] << endl;
 
 	double bgnEta[2] = {bgRbegin,bgRend}; //  ietaBckThr=5 R=1.0
 
@@ -217,7 +236,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 		cout << idtyp <<"\t"<< nzvtx[idtyp] << endl;
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
 			for(int iptt=0; iptt<NumPtt; iptt++){
-				if(idtyp==AA) for(int iz=0; iz<nzvtx[idtyp]; iz++) hTriggPtBinVtx[idtyp][ic][iz][iptt] = (TH1D*) fin[idtyp]->Get(Form("%s/AliJHistos/hTriggPtBin/hTriggPtBinC%02dV%02dT%02d",TopDir[idtyp].Data(),ic, 05, iptt));
+				if(idtyp==AA) for(int iz=0; iz<nzvtx[idtyp]; iz++) hTriggPtBinVtx[idtyp][ic][iz][iptt] = (TH1D*) fin[idtyp]->Get(Form("%s/AliJHistos/hTriggPtBin/hTriggPtBinC%02dV%02dT%02d",TopDir[idtyp].Data(),ic, iz, iptt));
 				if(idtyp==pp) for(int iz=0; iz<nzvtx[idtyp]; iz++) hTriggPtBinVtx[idtyp][ic][iz][iptt] = (TH1D*) fin[idtyp]->Get(Form("%s/AliJHistos/hTriggPtBin/hTriggPtBinC%02dV%02dT%02d",TopDir[idtyp].Data(),ic, iz, iptt));
 				for(int ipta=0;ipta<NumPta;ipta++) {
 					//hAssocPtBin[idtyp][ic][iptt][ipta] = (TH1D*) fin[idtyp]->Get(Form("%s/AliJHistos/hAssocPtBin/hAssocPtBin%02d%02d%02d", TopDir[idtyp].Data(),ic, iptt,ipta));//distribution of trigger pT
@@ -227,7 +246,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 						if(idtyp==AA) {
 							for(int iz=0; iz<nzvtx[idtyp]; iz++){
 								//cout << Form("%s/hDphiDetaPta/hDphiDetaPtaD%02dC%02dV%02dT%02dA%02d",TopDir[idtyp].Data(), ityp, ic, 5, iptt, ipta) << endl;
-								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta] = (TH2D *)fin[idtyp]->Get(Form("%s/AliJHistos/hDphiDetaPta/hDphiDetaPtaD%02dC%02dV%02dT%02dA%02d",TopDir[idtyp].Data(), ityp, ic, 5, iptt, ipta));
+								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta] = (TH2D *)fin[idtyp]->Get(Form("%s/AliJHistos/hDphiDetaPta/hDphiDetaPtaD%02dC%02dV%02dT%02dA%02d",TopDir[idtyp].Data(), ityp, ic, iz, iptt, ipta));
 								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->SetXTitle("#Delta#eta");
 								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->GetXaxis()->CenterTitle(kTRUE);
 								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->GetXaxis()->SetTitleOffset(2);
@@ -576,7 +595,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	// Write down Iaa and yields into a root file
 	if(saveRoot) {
 		cout <<"Writing the results into a file..."<< endl;
-		TFile *fout = new TFile(Form("%s_%s_Iaa_R%.1f_%.1f_%.2f_%s_Wing%d.root",prefix.Data(),oname.Data(),sgnEta,bgnEta[0],bgnEta[1],sidelabel[int(Side)],applyWingCorrection),"recreate");
+		TFile *fout = new TFile(Form("%s_%s_%s_Iaa_R%.1f_%.1f_%.2f_%s_Wing%d.root",prefix.Data(),oname.Data(),dirAA.Data(),sgnEta,bgnEta[0],bgnEta[1],sidelabel[int(Side)],applyWingCorrection),"recreate");
 		fout->cd();
 		for(int iptt=0;iptt<NPTT;iptt++) {
 			grInclYieldpp[iptt]->Write(Form("grInclYieldpp_%02d",iptt));
