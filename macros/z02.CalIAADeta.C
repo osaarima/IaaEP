@@ -1,7 +1,7 @@
 
 #include "include/Filipad.h"
 
-
+TH1D *Flip(TH1D* hin, int idtyp);
 TGraphErrors* get_ratio( TGraphErrors * l, TGraphErrors *r );
 
 const int kMAXD       = 20; //maximal number of pT trigger bins
@@ -16,13 +16,19 @@ TH1D *hIAAEta[kCENT][kMAXD][kMAXD]; // in eta,phi
 TFile *fin;
 // adding DeltaEta histograms after mixed event corrections
 // with $\Delta\phi$ < 0.2 ??? check
-TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // filipp summed DeltaEta AA-0 pp-1
+TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // summed DeltaEta AA-0 pp-1
 // save this into an additional root file, fit and IAA will be calculated in z02.CalIAADeta.C
+TH1D *hDeltaEtaFlip[2][kCENT][kMAXD][kMAXD]; // Flip Deta around 0 to positive side
+TH1D *hIAADeltaEta[kCENT][kMAXD][kMAXD];
 Bool_t saveDeta = kTRUE;
 double lowx=-0.5;
 double highx=0.5;
 double ly = -0.1;
-double hy = 1.5;
+double hy = 1.0;
+double lowIAA = 0.;
+double highIAA = 2.;
+
+
 
 
 
@@ -43,14 +49,8 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	AssocPtBorders             = (TVector*) fin->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin->Get("CentBinBorders");
 
-	int reference = 0; //0=pp, 1=60-90%
-	int logy = 1;
-	int plotIAA = 1;
+
 	int saveRoot = 1;  
-	int sdx = 250;
-	double lpta = 0.;
-	double hpta = 10.;
-	double hIAA = 5.;
 	// for merging mixed event
 
 	int NumCent[2]    = { CentBinBorders->GetNoElements()-1, 1}; 
@@ -77,14 +77,28 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					hDeltaEta[idtyp][ic][iptt][ipta]->SetXTitle("#Delta#eta");
 					hDeltaEta[idtyp][ic][iptt][ipta]->GetXaxis()->CenterTitle(kTRUE);
 					hDeltaEta[idtyp][ic][iptt][ipta]->GetXaxis()->SetTitleOffset(2);
-
+					hDeltaEtaFlip[idtyp][ic][iptt][ipta] = Flip((TH1D*) hDeltaEta[idtyp][ic][iptt][ipta], idtyp);
 				} // ipta
 			} // iptt 
 		} // ic
 	} // pp or AA
 
-	int iPTT=2;
-	int iPTA=3;
+	// Need to substract background from Generalized Gaussians..
+
+	cout <<"Calculationg IAA..."<<endl;
+
+	for(int ic=0; ic<NumCent[AA]; ic++){
+		for(int iptt=0; iptt<NPTT; iptt++){
+			for(int ipta=0;ipta<NPTA;ipta++) {
+				hIAAEta[ic][iptt][ipta] = (TH1D*)hDeltaEta[AA][ic][iptt][ipta]->Clone();
+				hIAAEta[ic][iptt][ipta]->Divide(hDeltaEta[pp][0][iptt][ipta]);
+			} // iptt 
+		} // ic
+	}
+
+
+	int iPTT=3;
+	int iPTA=5;
 
 	for(int ic=0;ic<NC;ic++) {
 		Filipad *fpad = new Filipad(ic+1, 1.1, 0.4, 100, 100, 0.7, 5);
@@ -106,9 +120,11 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 		hDeltaEta[AA][ic][iPTT][iPTA]->Draw("p,same");
 		hDeltaEta[pp][0][iPTT][iPTA]->SetMarkerStyle(24);
 		hDeltaEta[pp][0][iPTT][iPTA]->Draw("p,same");
+		hDeltaEtaFlip[AA][ic][iPTT][iPTA]->SetMarkerStyle(25);
+		hDeltaEtaFlip[AA][ic][iPTT][iPTA]->Draw("p,same");
 
 		leg->AddEntry(hDeltaEta[AA][ic][iPTT][iPTA],hDeltaEta[AA][ic][iPTT][iPTA]->GetTitle(),"p");
-        leg->AddEntry(hDeltaEta[pp][0][iPTT][iPTA],hDeltaEta[pp][0][iPTT][iPTA]->GetTitle(),"p");
+		leg->AddEntry(hDeltaEta[pp][0][iPTT][iPTA],hDeltaEta[pp][0][iPTT][iPTA]->GetTitle(),"p");
 		
 		leg->Draw();
 
@@ -116,11 +132,35 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 		//==== Lower pad
 		p = fpad->GetPad(2);
 		p->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();
-		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, -0.35, 0.35);
+		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, lowIAA, highIAA);
 		hset( *hfr1, "#Delta#eta", "AA/pp",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
 		hfr1->Draw();
+		hIAAEta[ic][iPTT][iPTA]->SetMarkerStyle(20);
+		hIAAEta[ic][iPTT][iPTA]->Draw("p,same");
 		//gPad->GetCanvas()->SaveAs(Form("figs_svn/FigA4_v%d_modelcomparisonBest.eps",i+2));
 	}
+}
+
+
+TH1D *Flip(TH1D* hin, int idtyp){
+	int nb  = hin->GetNbinsX();
+	double max = hin->GetBinLowEdge(nb+1);
+	TString hname = hin->GetName();
+	TString newName = Form("%s_flip%d",hname.Data(),idtyp);
+
+	TH1D *hFlip = new TH1D(newName.Data(), newName.Data(), (int) nb/2, 0, max);
+	int zero = hin->FindBin(0.00001);
+	for(int ib=zero; ib<=nb; ib++){
+		double valPos = hin->GetBinContent(ib);
+		double errPos = hin->GetBinError(ib);
+		double valNeg = hin->GetBinContent(nb - ib+1);
+		double errNeg = hin->GetBinError(nb - ib+1);
+
+		hFlip->SetBinContent(ib-zero+1, valPos+valNeg);
+		hFlip->SetBinError(ib-zero+1, sqrt( errPos*errPos + errNeg * errNeg ));
+	}
+
+	return hFlip;
 }
 
 

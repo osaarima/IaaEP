@@ -34,7 +34,7 @@ TFile *fmix;
 TF2 *g2D;
 // adding DeltaEta histograms after mixed event corrections
 // with $\Delta\phi$ < 0.2 ??? check
-TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // filipp summed DeltaEta AA-1 pp-0
+TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // summed DeltaEta AA-1 pp-0
 // save this into an additional root file, fit and IAA will be calculated in z02.CalIAADeta.C
 Bool_t saveDeta = kTRUE;
 
