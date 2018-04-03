@@ -185,8 +185,8 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	int iPTA=4;
 
 	//DrawBeforeFlip(iPTT, iPTA);
-	//DrawAfterFlip(iPTT, iPTA);
-	DrawSignal(iPTT, iPTA);
+	DrawAfterFlip(iPTT, iPTA);
+	//DrawSignal(iPTT, iPTA);
 
 	if(saveRoot) {
 		cout <<"Writing the results into a file..."<< endl;

@@ -15,6 +15,7 @@ double GetGeoAccCorrFlat(double deltaEta);
 const int kMAXD       = 20; //maximal number of pT trigger bins
 const int kCENT       = 10; //maximal number of pT trigger bins
 const int kZvtx       = 15; //maximal number of pT trigger bins
+double fmaxEtaRange = 0.8;
 
 TH1D *hTriggPtBin[2][kCENT][kMAXD]; 
 TH1D *hAssocPtBin[2][kCENT][kMAXD][kMAXD]; 
@@ -389,7 +390,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta] );
-							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(2*1.6/norm);
+							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(2*fmaxEtaRange/norm);
 							if(correctMix) hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatAA[ic][iptt][ipta] = nmixed;
@@ -401,7 +402,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta] );
-							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(2*1.6/norm);
+							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(2*fmaxEtaRange/norm);
 							if(correctMix) hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatPP[iptt][ipta] = nmixed;
@@ -452,7 +453,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 						TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
 						hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
 						double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
-						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*1.6/WingNorm,"width");
+						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm,"width");
 						if(applyWingCorrection && idtyp==AA) ApplyWingCorrection(hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], hWingCorrection[idtyp][ic][iptt][ipta]);
 					}	
 				}
@@ -479,7 +480,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 						TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
 						hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
 						double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
-						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*1.6/WingNorm,"width");
+						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm,"width");
 					}
 				}	
 			}
@@ -924,4 +925,17 @@ double GetGeoAccCorrFlat(double deltaEta){
 		return 1.0/denominator;
 	else
 		return 0;
+}
+void RestoreTriangle(TH1D* h, double etaMax ){
+
+        int nb = h->GetNbinsX();
+        for(int ib=1;ib<=nb;ib++){
+                double val = h->GetBinContent(ib);
+                double err = h->GetBinError(ib);
+                double x = fabs(h->GetBinCenter(ib));
+
+                h->SetBinContent(ib, val * ( 1- x/2.0/etaMax));
+                h->SetBinError(ib,   err * ( 1- x/2.0/etaMax));
+        }
+
 }
