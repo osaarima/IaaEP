@@ -86,7 +86,7 @@ void run(){
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
-					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],commentAA[iA]+"_"+commentPP[iP] );
+					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],commentAA[iA]+dirAA[iA]+"_"+commentPP[iP] );
 				}
 			}
 		}
@@ -595,7 +595,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	// Write down Iaa and yields into a root file
 	if(saveRoot) {
 		cout <<"Writing the results into a file..."<< endl;
-		TFile *fout = new TFile(Form("%s_%s_%s_Iaa_R%.1f_%.1f_%.2f_%s_Wing%d.root",prefix.Data(),oname.Data(),dirAA.Data(),sgnEta,bgnEta[0],bgnEta[1],sidelabel[int(Side)],applyWingCorrection),"recreate");
+		TFile *fout = new TFile(Form("%s_%s_Iaa_R%.1f_%.1f_%.2f_%s_Wing%d.root",prefix.Data(),oname.Data(),sgnEta,bgnEta[0],bgnEta[1],sidelabel[int(Side)],applyWingCorrection),"recreate");
 		fout->cd();
 		for(int iptt=0;iptt<NPTT;iptt++) {
 			grInclYieldpp[iptt]->Write(Form("grInclYieldpp_%02d",iptt));
@@ -733,7 +733,7 @@ double IntegralOfSmallR( TH2D *hist, double rs, double rb, double &val, double &
 	double dy = hist->GetYaxis()->GetBinWidth(1); // phi
 	if(rs <=  0.3 ) {
 		double xcent = rb+rs;
-		cout << "rs : rb : xcent = "<< rs <<"\t"<< rb <<"\t"<< xcent <<  endl;
+		//cout << "rs : rb : xcent = "<< rs <<"\t"<< rb <<"\t"<< xcent <<  endl;
 		for( int ix=1;ix <= hist->GetNbinsX();ix++ ){
 			double x = hist->GetXaxis()->GetBinCenter(ix);
 			for( int iy=1;iy <= hist->GetNbinsY();iy++ ){
