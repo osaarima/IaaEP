@@ -39,7 +39,7 @@ TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // summed DeltaEta AA-1 pp-0
 Bool_t saveDeta = kTRUE;
 
 
-void run(){
+void runs(){
 
 	const int NAA = 6;
 	TString fileAA[NAA] = {
@@ -388,6 +388,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kReal][iz][ic][iptt][ipta]->Clone();
 							double norm  = hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
+							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta] );
 							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(2*1.6/norm);
 							if(correctMix) hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
@@ -399,6 +400,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxPP[kReal][iz][ic][iptt][ipta]->Clone();
 							double norm  = hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
+							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta] );
 							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(2*1.6/norm);
 							if(correctMix) hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
@@ -450,7 +452,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 						TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
 						hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
 						double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
-						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*1.6/WingNorm);
+						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*1.6/WingNorm,"width");
 						if(applyWingCorrection && idtyp==AA) ApplyWingCorrection(hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], hWingCorrection[idtyp][ic][iptt][ipta]);
 					}	
 				}
@@ -477,7 +479,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 						TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
 						hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
 						double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
-						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*1.6/WingNorm);
+						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*1.6/WingNorm,"width");
 					}
 				}	
 			}
