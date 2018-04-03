@@ -10,6 +10,8 @@ TH1D* SubtractBg(TH1D *h, double bg, double ebg);
 void DrawAfterFlip(int iPTT, int iPTA);
 void DrawBeforeFlip(int iPTT, int iPTA);
 void DrawSignal(int iPTT, int iPTA);
+void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root",  TString oname="");
+void runs();
 
 const int kMAXD       = 20; //maximal number of pT trigger bins
 const int kCENT       = 10; //maximal number of pT trigger bins
@@ -37,7 +39,7 @@ TH1D *hIAADeltaEtaSig[kCENT][kMAXD][kMAXD]; // background substracted signal IAA
 TF1 *fKaplan[2][kCENT][kMAXD][kMAXD]; // 
 TF1 *fGG[2][kCENT][kMAXD][kMAXD]; //
 
-Bool_t saveDeta = kTRUE;
+Bool_t saveRoot = kTRUE;
 double lowx=-0.8;
 double highx=0.8;
 double ly = -0.1;
@@ -49,6 +51,32 @@ TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
 
+void runs() {
+
+	const int Nsets = 6;
+	TString infiles[Nsets] = {
+		"sysErrors/_AMPT_LHC13f3cJCIAA_TPC_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3cJCIAA_TPC_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3cJCIAA_V0A_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3cJCIAA_V0A_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3cJCIAA_V0P_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3cJCIAA_V0P_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	};
+
+	TObjArray *outString[Nsets];
+	TString outrootname[Nsets];
+	for(int i=0;i<Nsets;i++) { 
+		outString[i] = infiles[i].Tokenize("/");
+		TString sDir = ((TObjString *)outString[i]->At(0))->GetString();
+		TString sName = ((TObjString *)outString[i]->At(1))->GetString();
+		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
+		//cout << outrootname[i] << endl;
+	}
+	for(int i=0;i<Nsets;i++) { 
+		DoAnalysis(infiles[i],outrootname[i]);
+	}
+//	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
+}
 
 
 void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root",  TString oname=""){
@@ -57,7 +85,7 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	cout <<"Discription :"<< oname << endl;
 
 	fin = TFile::Open(inFile);
-	
+
 	TVector *TriggPtBorders;
 	TVector *AssocPtBorders;
 	TVector *CentBinBorders;
@@ -156,6 +184,29 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	//DrawBeforeFlip(iPTT, iPTA);
 	//DrawAfterFlip(iPTT, iPTA);
 	DrawSignal(iPTT, iPTA);
+
+	if(saveRoot) {
+		cout <<"Writing the results into a file..."<< endl;
+		TFile *fout = new TFile(Form("%s",oname.Data()),"recreate");
+		fout->cd();
+		// Deltaeta
+		for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
+			for(int ic=0; ic<NumCent[idtyp]; ic++){
+				for(int iptt=0; iptt<NPTT; iptt++){
+					for(int ipta=0;ipta<NPTA;ipta++) {
+						hDeltaEtaSig[idtyp][ic][iptt][ipta]->Write();
+						if(idtyp==AA) hIAADeltaEtaSig[ic][iptt][ipta]->Write();
+					} // pta
+				} // ptt 
+			} // cent
+		} // type 
+		fout->cd();
+		CentBinBorders->Write("CentBinBorders");
+		TriggPtBorders->Write("TriggPtBorders");
+		AssocPtBorders->Write("AssocPtBorders");
+		fout->Close();
+	}
+
 }
 
 //------------------------------------------------------------------------------------------------
@@ -181,7 +232,7 @@ void DrawSignal(int iPTT, int iPTA) {
 		hDeltaEtaSig[AA][ic][iPTT][iPTA]->Draw("p,same");
 		hDeltaEtaSig[pp][0][iPTT][iPTA]->SetMarkerStyle(24);
 		hDeltaEtaSig[pp][0][iPTT][iPTA]->Draw("p,same");
-	
+
 
 		leg->AddEntry(hDeltaEtaSig[AA][ic][iPTT][iPTA],hDeltaEtaSig[AA][ic][iPTT][iPTA]->GetTitle(),"p");
 		leg->AddEntry(hDeltaEtaSig[pp][0][iPTT][iPTA],hDeltaEtaSig[pp][0][iPTT][iPTA]->GetTitle(),"p");
