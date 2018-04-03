@@ -339,6 +339,7 @@ void DrawBeforeFlip(int iPTT, int iPTA) {
 //------------------------------------------------------------------------------------------------
 TH1D *Flip(TH1D* hin, int idtyp){
 	int nb  = hin->GetNbinsX();
+	double scale = 2.0; // MUST Have dN/deta -> dN/d|eta|
 	double max = hin->GetBinLowEdge(nb+1);
 	TString hname = hin->GetName();
 	TString newName = Form("%s_flip%d",hname.Data(),idtyp);
@@ -352,8 +353,8 @@ TH1D *Flip(TH1D* hin, int idtyp){
 		double valNeg = hin->GetBinContent(nb - ib+1);
 		double errNeg = hin->GetBinError(nb - ib+1);
 
-		hFlip->SetBinContent(ib-zero+1, (valPos+valNeg));
-		hFlip->SetBinError(ib-zero+1, sqrt( errPos*errPos + errNeg * errNeg ));
+		hFlip->SetBinContent(ib-zero+1, (valPos+valNeg)/scale);
+		hFlip->SetBinError(ib-zero+1, sqrt( errPos*errPos + errNeg * errNeg )/scale);
 	}
 
 	return hFlip;
