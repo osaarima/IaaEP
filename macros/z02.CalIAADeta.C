@@ -120,6 +120,9 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					hDeltaEta[idtyp][ic][iptt][ipta]->GetXaxis()->SetTitleOffset(2);
 					hDeltaEta[idtyp][ic][iptt][ipta]->SetYTitle("1/N_{trigg} dN/d#Delta#eta");
 					hDeltaEtaFlip[idtyp][ic][iptt][ipta] = Flip((TH1D*) hDeltaEta[idtyp][ic][iptt][ipta], idtyp);
+					// cale with Deltaeta only now , check z01.zzz  
+					hDeltaEta[idtyp][ic][iptt][ipta]->Scale(1.,"width"); // scale with Deltaeta
+					hDeltaEtaFlip[idtyp][ic][iptt][ipta]->Scale(1.,"width"); // scale with Deltaeta
 				} // ipta
 			} // iptt 
 		} // ic
@@ -219,6 +222,7 @@ void DrawSignal(int iPTT, int iPTA) {
 		//==== Upper pad
 		TPad *p = fpad->GetPad(1); //upper pad
 		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
+		hy = hDeltaEtaSig[AA][ic][iPTT][iPTA]->GetMaximum()*1.2;
 		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
 		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d#Delta#eta",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 		hfr->Draw();
@@ -260,6 +264,7 @@ void DrawAfterFlip(int iPTT, int iPTA) {
 		//==== Upper pad
 		TPad *p = fpad->GetPad(1); //upper pad
 		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
+		hy = hDeltaEtaFlip[AA][ic][iPTT][iPTA]->GetMaximum()*1.2;
 		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
 		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d#Delta#eta",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 		hfr->Draw();
@@ -302,6 +307,7 @@ void DrawBeforeFlip(int iPTT, int iPTA) {
 		//==== Upper pad
 		TPad *p = fpad->GetPad(1); //upper pad
 		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
+		hy = hDeltaEta[AA][ic][iPTT][iPTA]->GetMaximum()*1.2;
 		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
 		hset( *hfr, "#Delta#eta", "1/N_{trigg} dN/d#Delta#eta",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 		hfr->Draw();
