@@ -41,28 +41,25 @@ Bool_t saveDeta = kTRUE;
 
 void run(){
 
-	const int NAA = 7;
+	const int NAA = 6;
 	TString fileAA[NAA] = {
 		//"legotrain_JCIaa/data/JCIaa_legotrain_PbPb_CF-5059_20180329-1139_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-924_20180317-0022-AMPT_LHC13f3c.root"
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-939_20180331-0130-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-939_20180331-0130-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-940_20180331-0131-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-940_20180331-0131-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-938_20180331-0111-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-938_20180331-0111-AMPT_LHC13f3c.root"
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-948_20180402-2121-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-948_20180402-2121-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-949_20180402-2122-AMPT_LHC13f3c.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-949_20180402-2122-AMPT_LHC13f3c.root"
 	};
 	TString dirAA[NAA] = {
-		"JCIAA_TPCOnly_H0_T0",
+		"JCIAA_TPC_E00",
+		"JCIAA_TPC_E90",
 		"JCIAA_V0A_E00",
 		"JCIAA_V0A_E90",
 		"JCIAA_V0P_E00",
 		"JCIAA_V0P_E90",
-		"JCIAA_TPC_E00",
-		"JCIAA_TPC_E90"
 	};
 	TString commentAA[NAA] = {
-		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",

@@ -107,23 +107,28 @@ void LoadData() {
 //------------------------------------------------------------------------------------------------
 void Compare(){
 	LoadData();
-	int iPTT=3;
-	int iPTA=4;
-
-	DrawSignal(iPTT, iPTA);
+	//int iPTT=3;
+	//int iPTA=2;
+	for(int iptt=0; iptt<NPTT; iptt++){
+			for(int ipta=0;ipta<NPTA;ipta++) {
+				DrawSignal(iptt, ipta);
+			}
+	}
 
 }
 
 
 //------------------------------------------------------------------------------------------------
 void DrawSignal(int iPTT, int iPTA) {
+	Filipad *fpad[NumCent[AA]];
 	lowx = -0.01;
 	for(int ic=0;ic<NumCent[AA];ic++) {
-		Filipad *fpad = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NumCent[AA]);
-		fpad->Draw();
+		fpad[ic] = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NumCent[AA]);
+		fpad[ic]->Draw();
 		//==== Upper pad
-		TPad *p = fpad->GetPad(1); //upper pad
+		TPad *p = fpad[ic]->GetPad(1); //upper pad
 		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
+		hy = hDeltaEtaSig[0][AA][ic][iPTT][iPTA]->GetMaximum()*1.2;
 		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
 		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d#Delta#eta",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 		hfr->Draw();
@@ -138,15 +143,16 @@ void DrawSignal(int iPTT, int iPTA) {
 		for(int iS=0;iS<Nsets;iS++) {
 			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[iS]);
 			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->SetMarkerColor(gColors[iS]);
+			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->SetLineColor(gColors[iS]);
 			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->Draw("p,same");
-			leg->AddEntry(hDeltaEtaSig[iS][AA][ic][iPTT][iPTA],sLeg[iS],"p");
+			leg->AddEntry(hDeltaEtaSig[iS][AA][ic][iPTT][iPTA],sLeg[iS],"pl");
 		}
 
 		
 		leg->Draw();
 
 		//==== Lower pad
-		p = fpad->GetPad(2);
+		p = fpad[ic]->GetPad(2);
 		p->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();
 		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, lowIAA, highIAA);
 		hset( *hfr1, "|#Delta#eta|", "OUT/IN",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
@@ -154,12 +160,14 @@ void DrawSignal(int iPTT, int iPTA) {
 		for(int i=0;i<3;i++) {
 			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[i*2]);
 			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerColor(gColors[i*2]);
+			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetLineColor(gColors[i*2]);
 			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->Draw("p,same");
 		}
 		//for(int iS=0;iS<Nsets;iS++) {
 		//	hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[iS]);
 		//	hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->Draw("p,same");
 		//}
-		//gPad->GetCanvas()->SaveAs(Form("figs_svn/FigA4_v%d_modelcomparisonBest.eps",i+2));
+		gPad->GetCanvas()->SaveAs(Form("figs/DeltaEta_OUTOIN_C%02dT%02dA%02d.pdf",ic,iPTT,iPTA));
 	}
+	//for(int ic=0;ic<NumCent[AA];ic++) delete fpad[ic];
 }
