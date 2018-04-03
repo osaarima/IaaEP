@@ -38,6 +38,7 @@ TF2 *g2D;
 TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // summed DeltaEta AA-1 pp-0
 // save this into an additional root file, fit and IAA will be calculated in z02.CalIAADeta.C
 Bool_t saveDeta = kTRUE;
+Bool_t mcTrue = kTRUE; //  RestoreTriangle
 
 
 void runs(){
@@ -390,7 +391,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta] );
-							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(2*fmaxEtaRange/norm);
+							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(2*2*fmaxEtaRange/norm);
 							if(correctMix) hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatAA[ic][iptt][ipta] = nmixed;
@@ -402,7 +403,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta] );
-							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(2*fmaxEtaRange/norm);
+							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(2*2*fmaxEtaRange/norm);
 							if(correctMix) hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatPP[iptt][ipta] = nmixed;
