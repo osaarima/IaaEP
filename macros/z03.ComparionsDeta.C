@@ -109,7 +109,7 @@ void Compare(){
 	LoadData();
 	//int iPTT=3;
 	//int iPTA=2;
-	DrawSignal(3, 2);
+	DrawSignal(3, 3);
 	/*
 	for(int iptt=3; iptt<NPTT; iptt++){
 			for(int ipta=2;ipta<NPTA;ipta++) {
@@ -133,7 +133,7 @@ void DrawSignal(int iPTT, int iPTA) {
 		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
 		hy = hDeltaEtaSig[0][AA][ic][iPTT][iPTA]->GetMaximum()*1.2;
 		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
-		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d#Delta#eta",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
+		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d|#Delta#eta|",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 		hfr->Draw();
 		//Legend definition
 		TLegend *leg = new TLegend(0.45,0.4,0.85,0.78,"","brNDC");

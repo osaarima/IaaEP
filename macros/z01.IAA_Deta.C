@@ -26,7 +26,7 @@ TH1D *hIAAEta[kCENT][kMAXD][kMAXD]; // in eta,phi
 TH1D *hIAAPhi[kCENT][kMAXD][kMAXD]; // in eta,phi 
 
 // before the z average
-TH2D *hDphiAssoc2DIAAVtxAA[3][kZvtx][kCENT][kMAXD][kMAXD]; // 0:kReal 1:kMixed 2:signal 
+TH2D *hDphiAssoc2DIAAVtxAA[3][kZvtx][kCENT][kMAXD][kMAXD]; // 0:kReal 1:kMixed 2:signal  can't make 6 dim array..
 TH2D *hDphiAssoc2DIAAVtxPP[3][kZvtx][kCENT][kMAXD][kMAXD]; // 0:kReal 1:kMixed 2:signal 
 TH1D *hTriggPtBinVtx[2][kCENT][kZvtx][kMAXD]; 
 TFile *fin[2];
