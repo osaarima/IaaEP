@@ -109,8 +109,8 @@ void Compare(){
 	LoadData();
 	//int iPTT=3;
 	//int iPTA=2;
-	for(int iptt=0; iptt<NPTT; iptt++){
-			for(int ipta=0;ipta<NPTA;ipta++) {
+	for(int iptt=3; iptt<NPTT; iptt++){
+			for(int ipta=2;ipta<NPTA;ipta++) {
 				DrawSignal(iptt, ipta);
 			}
 	}

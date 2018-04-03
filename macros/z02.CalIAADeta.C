@@ -352,8 +352,8 @@ TH1D *Flip(TH1D* hin, int idtyp){
 		double valNeg = hin->GetBinContent(nb - ib+1);
 		double errNeg = hin->GetBinError(nb - ib+1);
 
-		hFlip->SetBinContent(ib-zero+1, (valPos+valNeg)/2.0);
-		hFlip->SetBinError(ib-zero+1, sqrt( errPos*errPos + errNeg * errNeg )/2.);
+		hFlip->SetBinContent(ib-zero+1, (valPos+valNeg));
+		hFlip->SetBinError(ib-zero+1, sqrt( errPos*errPos + errNeg * errNeg ));
 	}
 
 	return hFlip;
