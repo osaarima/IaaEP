@@ -194,8 +194,8 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 			for(int ic=0; ic<NumCent[idtyp]; ic++){
 				for(int iptt=0; iptt<NPTT; iptt++){
 					for(int ipta=0;ipta<NPTA;ipta++) {
-						hDeltaEtaSig[idtyp][ic][iptt][ipta]->Write();
-						if(idtyp==AA) hIAADeltaEtaSig[ic][iptt][ipta]->Write();
+						hDeltaEtaSig[idtyp][ic][iptt][ipta]->Write(Form("hDeltaEtaSig%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta));
+						if(idtyp==AA) hIAADeltaEtaSig[ic][iptt][ipta]->Write(Form("hIAADeltaEtaSigC%02dT%02dA%02d",ic,iptt,ipta));
 					} // pta
 				} // ptt 
 			} // cent
