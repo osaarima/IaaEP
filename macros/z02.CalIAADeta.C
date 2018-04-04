@@ -11,7 +11,7 @@ void DrawAfterFlip(int iPTT, int iPTA);
 void DrawBeforeFlip(int iPTT, int iPTA);
 void DrawSignal(int iPTT, int iPTA);
 void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root",  TString oname="");
-void runs();
+void run2();
 
 const int kMAXD       = 20; //maximal number of pT trigger bins
 const int kCENT       = 10; //maximal number of pT trigger bins
@@ -51,7 +51,7 @@ TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
 
-void runs() {
+void run2() {
 
 	const int Nsets = 6;
 	TString infiles[Nsets] = {
@@ -121,8 +121,8 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					hDeltaEta[idtyp][ic][iptt][ipta]->SetYTitle("1/N_{trigg} dN/d#Delta#eta");
 					hDeltaEtaFlip[idtyp][ic][iptt][ipta] = Flip((TH1D*) hDeltaEta[idtyp][ic][iptt][ipta], idtyp);
 					// Scale with Deltaeta only now , check z01.zzz  
-					//hDeltaEta[idtyp][ic][iptt][ipta]->Scale(1.,"width"); // scale with Deltaeta
-					//hDeltaEtaFlip[idtyp][ic][iptt][ipta]->Scale(1.,"width"); // scale with Deltaeta
+					hDeltaEta[idtyp][ic][iptt][ipta]->Scale(1.,"width"); // scale with Deltaeta
+					hDeltaEtaFlip[idtyp][ic][iptt][ipta]->Scale(1.,"width"); // scale with Deltaeta
 				} // ipta
 			} // iptt 
 		} // ic

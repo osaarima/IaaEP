@@ -11,11 +11,13 @@ double IntegralForpp( TH2D *hist, double rs, double rb, double &val, double &err
 void NormalizeToBinWidth2D ( TH2D *hist );
 void SaveCanvas(TString name, TDirectory * dir=0 );
 double GetGeoAccCorrFlat(double deltaEta);
+double NormalizationFactor(TH2D *MixedHisto);
 
 const int kMAXD       = 20; //maximal number of pT trigger bins
 const int kCENT       = 10; //maximal number of pT trigger bins
 const int kZvtx       = 15; //maximal number of pT trigger bins
 double fmaxEtaRange = 0.8;
+
 
 TH1D *hTriggPtBin[2][kCENT][kMAXD]; 
 TH1D *hAssocPtBin[2][kCENT][kMAXD][kMAXD]; 
@@ -41,7 +43,7 @@ Bool_t saveDeta = kTRUE;
 Bool_t mcTrue = kTRUE; //  RestoreTriangle
 
 
-void runs(){
+void run1(){
 
 	const int NAA = 6;
 	TString fileAA[NAA] = {
@@ -390,8 +392,9 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kReal][iz][ic][iptt][ipta]->Clone();
 							double norm  = hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
+							double normMix = NormalizationFactor(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
 							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta] );
-							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(2*2*fmaxEtaRange/norm);
+							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(1./normMix);
 							if(correctMix) hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatAA[ic][iptt][ipta] = nmixed;
@@ -402,8 +405,9 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxPP[kReal][iz][ic][iptt][ipta]->Clone();
 							double norm  = hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
+							double normMix = NormalizationFactor(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
 							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta] );
-							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(2*2*fmaxEtaRange/norm);
+							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(1./normMix);
 							if(correctMix) hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatPP[iptt][ipta] = nmixed;
@@ -439,56 +443,56 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 			for(int iptt=0; iptt<NumPtt; iptt++){
 				hTriggPtBin[idtyp][ic][iptt] = (TH1D*)hTriggPtBinVtx[idtyp][ic][0][iptt]->Clone();
 				for(int iz=1; iz<nzvtx[idtyp]; iz++) hTriggPtBin[idtyp][ic][iptt]->Add(hTriggPtBinVtx[idtyp][ic][iz][iptt]);
-				for(int ipta=0;ipta<NumPta;ipta++) {
-					if(idtyp==AA) {
-						hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kSignal][0][ic][iptt][ipta]->Clone();
-						for(int iz=1; iz<nzvtx[idtyp]; iz++){
-							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Add(hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]);
-						}
-						double ntriggall = hTriggPtBin[idtyp][ic][iptt]->Integral();
-						cout <<"Number of Trigger particles "<< ic <<"\t"<< (*TriggPtBorders[AA])[iptt+1] <<"<ptt<"<< (*TriggPtBorders[AA])[iptt+2] <<"\t"<< ntriggall << endl;
-						hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Scale(1./ntriggall);
+					for(int ipta=0;ipta<NumPta;ipta++) {
+						if(idtyp==AA) {
+							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kSignal][0][ic][iptt][ipta]->Clone();
+							for(int iz=1; iz<nzvtx[idtyp]; iz++){
+								hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Add(hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]);
+							}
+							double ntriggall = hTriggPtBin[idtyp][ic][iptt]->Integral();
+						//cout <<"Number of Trigger particles "<< ic <<"\t"<< (*TriggPtBorders[AA])[iptt+1] <<"<ptt<"<< (*TriggPtBorders[AA])[iptt+2] <<"\t"<< ntriggall << endl;
+							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Scale(1./ntriggall);
 						// Check the wing correction
-						int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1-0.5);
-						int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1+0.5);
-						TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
-						hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
-						double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
-						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm,"width");
-						if(applyWingCorrection && idtyp==AA) ApplyWingCorrection(hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], hWingCorrection[idtyp][ic][iptt][ipta]);
-					}	
+							int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1-0.5);
+							int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1+0.5);
+							TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
+							hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
+							double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
+							hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm,"width");
+							if(applyWingCorrection && idtyp==AA) ApplyWingCorrection(hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], hWingCorrection[idtyp][ic][iptt][ipta]);
+						}	
+					}
 				}
 			}
 		}
-	}
 	// PP
 	for(int idtyp=1; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
 			for(int iptt=0; iptt<NumPtt; iptt++){
 				hTriggPtBin[idtyp][ic][iptt] = (TH1D*)hTriggPtBinVtx[idtyp][ic][0][iptt]->Clone();
 				for(int iz=1; iz<nzvtx[idtyp]; iz++) hTriggPtBin[idtyp][ic][iptt]->Add(hTriggPtBinVtx[idtyp][ic][iz][iptt]);
-				for(int ipta=0;ipta<NumPta;ipta++) {
-					if(idtyp==pp) {
-						hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxPP[kSignal][0][ic][iptt][ipta]->Clone();
-						for(int iz=1; iz<nzvtx[idtyp]; iz++){
-							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Add(hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]);
-						}
-						double ntriggall = hTriggPtBin[idtyp][ic][iptt]->Integral();
-						hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Scale(1./ntriggall);
+					for(int ipta=0;ipta<NumPta;ipta++) {
+						if(idtyp==pp) {
+							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxPP[kSignal][0][ic][iptt][ipta]->Clone();
+							for(int iz=1; iz<nzvtx[idtyp]; iz++){
+								hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Add(hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]);
+							}
+							double ntriggall = hTriggPtBin[idtyp][ic][iptt]->Integral();
+							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Scale(1./ntriggall);
 						// Check the wing correction
-						int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1-0.5);
-						int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1+0.5);
-						TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
-						hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
-						double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
-						hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm,"width");
-					}
-				}	
+							int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1-0.5);
+							int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1+0.5);
+							TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
+							hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
+							double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
+							hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm,"width");
+						}
+					}	
+				}
 			}
 		}
-	}
 
-	cout <<"Calculating Signal yields.. for integrated IAA.."<<endl;
+		cout <<"Calculating Signal yields.. for integrated IAA.."<<endl;
 	// Now calcuate yields
 	for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
@@ -619,8 +623,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 		} // type 
 		fout->cd();
 		CentBinBorders[AA]->Write("CentBinBorders");
-	    TriggPtBorders[AA]->Write("TriggPtBorders");
-        AssocPtBorders[AA]->Write("AssocPtBorders");
+		TriggPtBorders[AA]->Write("TriggPtBorders");
+		AssocPtBorders[AA]->Write("AssocPtBorders");
 		fout->Close();
 	}
 
@@ -665,6 +669,27 @@ void NormalizeToBinWidth2D(TH2D* H){
 			H->SetBinError(i,j,be/bwx/bwy);
 		}
 	}    
+}
+
+double NormalizationFactor(TH2D *MixedHisto) {
+//  int bin = MixedHisto->FindBin(0,0);
+//  double content = MixedHisto->GetBinContent(bin);
+	double content = 0;
+	int xbin, ybin, ybinmax;
+	xbin = MixedHisto->GetXaxis()->FindBin(0.0);
+	ybinmax = MixedHisto->GetYaxis()->GetNbins();
+	int nbins = 0;
+
+	for (int iybin = 2; iybin < ybinmax; iybin++) {
+		if (iybin > MixedHisto->GetYaxis()->FindBin(-0.2) && iybin < MixedHisto->GetYaxis()->FindBin(0.2)) continue;
+		content += MixedHisto->GetBinContent(xbin, iybin);
+		nbins++;
+	}
+	content /= nbins;
+	double bw = MixedHisto->GetXaxis()->GetBinWidth(3);
+	content *= 1 + bw/2 / (2*fmaxEtaRange-bw/2);
+
+	return content;
 }
 
 double IntegralOfCone( TH2D *hist, double rs, double r0, double r1, double x0, double y0, double &val, double &err, double &area ){
@@ -929,14 +954,14 @@ double GetGeoAccCorrFlat(double deltaEta){
 }
 void RestoreTriangle(TH1D* h, double etaMax ){
 
-        int nb = h->GetNbinsX();
-        for(int ib=1;ib<=nb;ib++){
-                double val = h->GetBinContent(ib);
-                double err = h->GetBinError(ib);
-                double x = fabs(h->GetBinCenter(ib));
+	int nb = h->GetNbinsX();
+	for(int ib=1;ib<=nb;ib++){
+		double val = h->GetBinContent(ib);
+		double err = h->GetBinError(ib);
+		double x = fabs(h->GetBinCenter(ib));
 
-                h->SetBinContent(ib, val * ( 1- x/2.0/etaMax));
-                h->SetBinError(ib,   err * ( 1- x/2.0/etaMax));
-        }
+		h->SetBinContent(ib, val * ( 1- x/2.0/etaMax));
+		h->SetBinError(ib,   err * ( 1- x/2.0/etaMax));
+	}
 
 }
