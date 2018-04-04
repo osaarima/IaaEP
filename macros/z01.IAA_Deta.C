@@ -322,6 +322,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 
 
 	cout <<"Mixed event correction"<<endl;
+	cout <<"NEED TO MAKE SURE 100% on the normalization of Mixed events" << endl;
 	//------------ Mixed event correction ------------    
 	for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
@@ -334,7 +335,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							double normMix = NormalizationFactor(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
-							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(normMix);
+							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(2.*fmaxEtaRange/normMix);
 							if(correctMix) hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatAA[ic][iptt][ipta] = nmixed;
@@ -346,7 +347,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							double normMix = NormalizationFactor(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
-							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(normMix);
+							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(2.*fmaxEtaRange/normMix);
 							if(correctMix) hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatPP[iptt][ipta] = nmixed;
@@ -397,7 +398,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
 							hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
 							double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
-							hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm,"width");
+							hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm);
 							if(applyWingCorrection && idtyp==AA) ApplyWingCorrection(hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], hWingCorrection[idtyp][ic][iptt][ipta]);
 						}	
 					}
@@ -424,14 +425,14 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							TString hname = Form("hWingCorrection%02d%02d%02d%02d",idtyp,ic,iptt,ipta);
 							hWingCorrection[idtyp][ic][iptt][ipta] = (TH1D*) hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(hname.Data(),phil,phih);
 							double WingNorm = hWingCorrection[idtyp][ic][iptt][ipta]->Integral();
-							hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm,"width");
+							hWingCorrection[idtyp][ic][iptt][ipta]->Scale(2*fmaxEtaRange/WingNorm);
 						}
 					}	
 				}
 			}
 		}
 
-		cout <<"Calculating Signal yields.. for integrated IAA.."<<endl;
+	cout <<"Calculating Signal yields.. for integrated IAA.."<<endl;
 	// Now calcuate yields
 	for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
@@ -488,6 +489,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	} // type 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	cout <<"Calculating DeltaEta, just projection "<<endl;
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
 		for(int ic=0; ic<NumCent[idtyp]; ic++){
 			for(int iptt=0; iptt<NumPtt; iptt++){
