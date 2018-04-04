@@ -192,11 +192,12 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	cout <<"bins:  c="<<  NumCent[0] <<" eta="<< NumEtaGaps <<" ptt="<< NumPtt <<" pta="<< NumPta  <<" zvtx="<<nzvtx[AA]<< endl; 
 	cout <<"+++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
 
+
+	// For low pT IAA
 	const int NC = NumCent[0];
 	const int NPTT = NumPtt;
 	const int NPTA = NumPta;
 	double MeanPta[2][NC][NPTT][NPTA];
-
 	double InclYieldAA[NC][NPTT][NPTA];
 	double InclYieldpp[NPTT][NPTA];
 	double eInclYieldAA[NC][NPTT][NPTA];
@@ -317,68 +318,8 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 				} 
 			} 
 		} 
-
-		// Copying the higher bins from merged one.
-		if(takeMixExt) {
-			for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
-				for(int ic=0; ic<NumCent[idtyp]; ic++){
-					for(int iptt=imixptt; iptt<NumPtt; iptt++){
-						for(int ipta=imixpta;ipta<NumPta;ipta++) {
-							for(int iz=0; iz<nzvtx[idtyp]; iz++){
-								if(idtyp==AA)	hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta] = (TH2D*)fmix->Get(Form("hDphiAssoc2DIAAVtxAAMixZ%02dC%02d_mergedmixAA",iz,ic)); 
-								if(idtyp==pp)	hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta] = (TH2D*)fmix->Get(Form("hDphiAssoc2DIAAVtxAAMixZ%02dC%02d_mergedmixPP",iz,ic)); 
-							}
-						}
-					}
-				}
-			} 
-		} else {	
-			for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
-				for(int ic=0; ic<NumCent[idtyp]; ic++){
-					for(int iz=0; iz<nzvtx[idtyp]; iz++){
-						for(int iptt=imixptt; iptt<NumPtt; iptt++){
-							for(int ipta=imixpta;ipta<NumPta;ipta++) {
-								if(idtyp==AA)	hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][imixptt][imixpta]->Clone();
-								if(idtyp==pp)	hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][imixptt][imixpta]->Clone();
-							} 
-						} 
-					}
-				}
-			} 
-		}
-		if(0) {
-			// Wrrite down the merged bin
-			TFile *fmixout = new TFile("mergedmixDJ_Cut1.root","recreate");
-			for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
-				for(int ic=0; ic<NumCent[idtyp]; ic++){
-					for(int iz=0; iz<nzvtx[idtyp]; iz++){
-						fmixout->cd();
-						if(idtyp==AA) hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][imixptt][imixpta]->Write(Form("hDphiAssoc2DIAAVtxAAMixZ%02dC%02d_mergedmixAA",iz,ic));
-						if(idtyp==pp) hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][imixptt][imixpta]->Write(Form("hDphiAssoc2DIAAVtxAAMixZ%02dC%02d_mergedmixPP",iz,ic));
-					} 
-				}
-			} 
-		}
-
-		// for drawing of merged mixed event
 	} // doMixMerge
 
-	// make integrated one here
-	cout <<"Merging mixed event z bins into one bin for drawing "<<endl;
-	for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp
-		for(int ic=0; ic<NumCent[idtyp]; ic++){
-			for(int iptt=0; iptt<NumPtt; iptt++){
-				for(int ipta=0;ipta<NumPta;ipta++) {
-					if(idtyp==AA)	hDphiAssoc2DIAA[idtyp][kMixed][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxAA[kMixed][0][ic][iptt][ipta]->Clone();
-					if(idtyp==pp)	hDphiAssoc2DIAA[idtyp][kMixed][ic][iptt][ipta] = (TH2D*)hDphiAssoc2DIAAVtxPP[kMixed][0][ic][iptt][ipta]->Clone();
-					for(int iz=1; iz<nzvtx[idtyp]; iz++){
-						if(idtyp==AA) hDphiAssoc2DIAA[idtyp][kMixed][ic][iptt][ipta]->Add(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
-						if(idtyp==pp) hDphiAssoc2DIAA[idtyp][kMixed][ic][iptt][ipta]->Add(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
-					} 
-				} 
-			}
-		}
-	} 
 
 	cout <<"Mixed event correction"<<endl;
 	//------------ Mixed event correction ------------    
@@ -393,9 +334,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							double normMix = NormalizationFactor(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
-							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta] );
-							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta] );
-							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(1./normMix);
+							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(normMix);
 							if(correctMix) hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatAA[ic][iptt][ipta] = nmixed;
@@ -407,9 +346,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							double normMix = NormalizationFactor(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
-							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta] );
-							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta] );
-							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(1./normMix);
+							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(normMix);
 							if(correctMix) hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
 						} // z bin
 						MixedEventStatPP[iptt][ipta] = nmixed;
@@ -453,7 +390,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							}
 							double ntriggall = hTriggPtBin[idtyp][ic][iptt]->Integral();
 						//cout <<"Number of Trigger particles "<< ic <<"\t"<< (*TriggPtBorders[AA])[iptt+1] <<"<ptt<"<< (*TriggPtBorders[AA])[iptt+2] <<"\t"<< ntriggall << endl;
-							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Scale(1./ntriggall);
+							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Scale(1./ntriggall,"width");
 						// Check the wing correction
 							int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1-0.5);
 							int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1+0.5);
@@ -480,7 +417,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 								hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Add(hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]);
 							}
 							double ntriggall = hTriggPtBin[idtyp][ic][iptt]->Integral();
-							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Scale(1./ntriggall);
+							hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Scale(1./ntriggall,"width");
 						// Check the wing correction
 							int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1-0.5);
 							int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(1+0.5);
