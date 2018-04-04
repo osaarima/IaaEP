@@ -393,6 +393,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							double normMix = NormalizationFactor(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
+							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta] );
 							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta] );
 							hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]->Scale(1./normMix);
 							if(correctMix) hDphiAssoc2DIAAVtxAA[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxAA[kMixed][iz][ic][iptt][ipta]);
@@ -406,6 +407,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 							double norm  = hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Integral(); // should be before binwidth co
 							nmixed+= norm;
 							double normMix = NormalizationFactor(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);
+							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta] );
 							NormalizeToBinWidth2D ( hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta] );
 							hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]->Scale(1./normMix);
 							if(correctMix) hDphiAssoc2DIAAVtxPP[kSignal][iz][ic][iptt][ipta]->Divide(hDphiAssoc2DIAAVtxPP[kMixed][iz][ic][iptt][ipta]);

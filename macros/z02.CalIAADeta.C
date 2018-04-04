@@ -120,9 +120,6 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 					hDeltaEta[idtyp][ic][iptt][ipta]->GetXaxis()->SetTitleOffset(2);
 					hDeltaEta[idtyp][ic][iptt][ipta]->SetYTitle("1/N_{trigg} dN/d#Delta#eta");
 					hDeltaEtaFlip[idtyp][ic][iptt][ipta] = Flip((TH1D*) hDeltaEta[idtyp][ic][iptt][ipta], idtyp);
-					// Scale with Deltaeta only now , check z01.zzz  
-					hDeltaEta[idtyp][ic][iptt][ipta]->Scale(1.,"width"); // scale with Deltaeta
-					hDeltaEtaFlip[idtyp][ic][iptt][ipta]->Scale(1.,"width"); // scale with Deltaeta
 				} // ipta
 			} // iptt 
 		} // ic
