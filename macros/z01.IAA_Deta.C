@@ -263,7 +263,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 								//hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->SetZTitle("#frac{1}{N_{trigg}} #frac{1}{d#Delta#eta#Delta#phi}");
 								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->GetZaxis()->CenterTitle(kTRUE);
 								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->GetZaxis()->SetTitleOffset(2);
-								//hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->Rebin2D(3,3);
+								hDphiAssoc2DIAAVtxAA[ityp][iz][ic][iptt][ipta]->Rebin2D(2,2);
 							}
 						}
 						if(idtyp==pp) {
@@ -278,7 +278,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 								//hDphiAssoc2DIAAVtxPP[ityp][iz][ic][iptt][ipta]->SetZTitle("#frac{1}{N_{trigg}} #frac{1}{d#Delta#eta#Delta#phi}");
 								hDphiAssoc2DIAAVtxPP[ityp][iz][ic][iptt][ipta]->GetZaxis()->CenterTitle(kTRUE);
 								hDphiAssoc2DIAAVtxPP[ityp][iz][ic][iptt][ipta]->GetZaxis()->SetTitleOffset(2);
-								//hDphiAssoc2DIAAVtxPP[ityp][iz][ic][iptt][ipta]->Rebin2D(3,3);
+								hDphiAssoc2DIAAVtxPP[ityp][iz][ic][iptt][ipta]->Rebin2D(2,2);
 							}
 						}
 					} // type

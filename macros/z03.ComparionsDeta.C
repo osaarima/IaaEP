@@ -112,7 +112,7 @@ void Compare(){
 	LoadData();
 	//int iPTT=3;
 	//int iPTA=2;
-	DrawDataAMPT(3,4);
+	DrawDataAMPT(2,3);
 	//DrawSignal(3, 4);
 	
 	// for(int iptt=3; iptt<NPTT; iptt++){
