@@ -1,4 +1,4 @@
-void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString dirAA="",TString oname="");
+void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString dirAA="", TString dirPP="", TString oname="");
 Double_t Gaus2D(Double_t *x, Double_t *par);
 void ApplyWingCorrection(TH2D* H, TH1D *hcorr);
 void SubtracFlowBackground(TH2D* H, TH1D *hflow);
@@ -8,7 +8,6 @@ double IntegralOfCone( TH2D *hist, double rs, double r0, double r1, double x0, d
 double IntegralOfRec( TH2D *hist, double rs, double r0, double r1, double x0, double y0, double &val, double &err, double &area );
 double IntegralOfMoon( TH2D *hist, double rs, double rb, double &val, double &err, double &area );
 double IntegralForpp( TH2D *hist, double rs, double rb, double &val, double &err, double &area );
-void NormalizeToBinWidth2D ( TH2D *hist );
 void SaveCanvas(TString name, TDirectory * dir=0 );
 double GetGeoAccCorrFlat(double deltaEta);
 double NormalizationFactor(TH2D *MixedHisto);
@@ -34,7 +33,6 @@ TH2D *hDphiAssoc2DIAAVtxPP[3][kZvtx][kCENT][kMAXD][kMAXD]; // 0:kReal 1:kMixed 2
 TH1D *hTriggPtBinVtx[2][kCENT][kZvtx][kMAXD]; 
 TFile *fin[2];
 TFile *fmix;
-TF2 *g2D;
 // adding DeltaEta histograms after mixed event corrections
 // with $\Delta\phi$ < 0.2 ??? check
 TH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // summed DeltaEta AA-1 pp-0
@@ -73,6 +71,10 @@ void run1(){
 	};
 
 	const int NPP = 1;
+	TString dirPP[NPP] = {
+		"JCIAA_GlobalSDD_H0_T0"
+	};
+
 	TString filePP[NPP] = {
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1677_20180326-1905-2760GeV_LHC11a_p4_AOD113_noSDD.root"
 	};
@@ -89,7 +91,7 @@ void run1(){
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
-					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],commentAA[iA]+dirAA[iA]+"_"+commentPP[iP] );
+					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],dirPP[iP],commentAA[iA]+dirAA[iA]+"_"+commentPP[iP] );
 				}
 			}
 		}
@@ -97,7 +99,7 @@ void run1(){
 }
 
 
-void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString dirAA, TString oname=""){
+void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, double bckScale=1.00, double Side = 0., TString inFile="", TString ppInFile="", TString dirAA, TString dirPP, TString oname=""){
 
 	int applyWingCorrection = 0;
 	int doMixMerge = 1;
@@ -173,10 +175,6 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	double v3PhaseCorr = 1.0; //0.95; // Needs to be finished
 	int collors[5] ={920, 622, 406, 590, 606};
 	//=========================================
-
-	g2D = new TF2("g2D",Gaus2D,-1.6,1.6,-0.4,0.4,5);
-	g2D->SetParNames("Const","#Delta#eta_{0}","#sigma_{#Delta#eta}","#Delta#phi_{0}","#sigma_{#Delta#phi}");
-	g2D->SetParameters(5,0,0.3,0,0.3);
 
 	double ntrigg = 0;
 
@@ -446,14 +444,11 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 					IntegralOfCone( hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], sgnEta,0., sgnEta, 0, Side , IncYield, eIncYield, IncYield_Area);
 					// Background
 					double  BckYield, eBckYield, BckYield_Area  ;
-					//if(idtyp==pp) IntegralForpp( hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], sgnEta, 1.0, BckYield, eBckYield, BckYield_Area );
-					//hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->Fit("g2D","V");
 					if (sgnEta<=0.3) {
 						IntegralOfSmallR( hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], sgnEta, bgnEta[0], BckYield, eBckYield, BckYield_Area ); // if(R<0.3     ) circle not moon
 					} else {
 						IntegralOfMoon( hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], sgnEta, bgnEta[0], BckYield, eBckYield, BckYield_Area );
 					}
-					//if(ic==4) IntegralForpp( hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta], sgnEta, bgnEta[0], BckYield, eBckYield, BckYield_Area );
 
 					double dpt = ((*AssocPtBorders[AA])[ipta+2]-(*AssocPtBorders[AA])[ipta+1]);
 					double nearMixedEventRatio = 1.;
@@ -597,23 +592,6 @@ void ApplyWingCorrection(TH2D* H, TH1D *hcorr){
 	}    
 }
 
-void NormalizeToBinWidth2D(TH2D* H){ 
-	// normalize each bin with the bin width
-	int nbx = H->GetNbinsX();
-	int nby = H->GetNbinsY();
-
-	for(int i=1;i<=nbx;i++){ //loop over all bins
-		for(int j=1;j<=nby;j++){ //loop over all bins
-			double bc = H->GetBinContent(i,j);
-			double be = H->GetBinError(i,j);
-			double bwx = H->GetXaxis()->GetBinWidth(i);
-			double bwy = H->GetYaxis()->GetBinWidth(j);
-
-			H->SetBinContent(i,j,bc/bwx/bwy);
-			H->SetBinError(i,j,be/bwx/bwy);
-		}
-	}    
-}
 
 double NormalizationFactor(TH2D *MixedHisto) {
 //  int bin = MixedHisto->FindBin(0,0);
