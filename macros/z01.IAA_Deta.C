@@ -43,9 +43,10 @@ Bool_t mcTrue = kTRUE; //  RestoreTriangle
 
 void run1(){
 
-	const int NAA = 6;
+	const int NAA = 8;
 	TString fileAA[NAA] = {
-		//"legotrain_JCIaa/data/JCIaa_legotrain_PbPb_CF-5059_20180329-1139_runlist_3-LHC10h_AOD86_MgFpMgFm.root"
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5100_20180404-1855_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-951_20180404-1915-AMPT_LHC13f3c.root", // Inclusive
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-948_20180402-2121-AMPT_LHC13f3c.root",
@@ -54,6 +55,8 @@ void run1(){
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-949_20180402-2122-AMPT_LHC13f3c.root"
 	};
 	TString dirAA[NAA] = {
+		"JCIAA_TPCOnly_H0_T0",
+		"JCIAA_TPCOnly_H0_T0",
 		"JCIAA_TPC_E00",
 		"JCIAA_TPC_E90",
 		"JCIAA_V0A_E00",
@@ -62,6 +65,8 @@ void run1(){
 		"JCIAA_V0P_E90",
 	};
 	TString commentAA[NAA] = {
+		"LHC10h_AOD86_MgFpMgFm",
+		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
@@ -76,7 +81,7 @@ void run1(){
 	};
 
 	TString filePP[NPP] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1677_20180326-1905-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
 	};
 	TString commentPP[NPP] = {
 		"LHC11a_p4_AOD113_noSDD"
@@ -91,7 +96,7 @@ void run1(){
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
-					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],dirPP[iP],commentAA[iA]+dirAA[iA]+"_"+commentPP[iP] );
+					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],dirPP[iP],commentAA[iA]+"_"+dirAA[iA]+"_"+commentPP[iP] );
 				}
 			}
 		}

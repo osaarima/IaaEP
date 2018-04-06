@@ -15,18 +15,22 @@ double highIAA = 2.2;
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV, AMPT String Melting";
 
-const int Nsets = 6;
+const int Nsets = 8;
 TString infiles[Nsets] = {
-	"sysErrors/Signal_AMPT_LHC13f3cJCIAA_TPC_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3cJCIAA_TPC_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3cJCIAA_V0A_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3cJCIAA_V0A_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3cJCIAA_V0P_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3cJCIAA_V0P_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_TPC_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_TPC_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_V0A_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_V0A_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_V0P_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_V0P_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
 TFile *fin[Nsets];
 
 TString sLeg[Nsets] = {
+	"LHC10h",
+	"Inclusive",
 	"TPC In",
 	"TPC Out",
 	"V0A In",
@@ -35,8 +39,8 @@ TString sLeg[Nsets] = {
 	"V0P Out"
 };
 
-int gMarkers[Nsets] = {20,24,21,25,23,27};
-int gColors[Nsets]={kBlack, kRed, kBlue, kDeepSea, kPink, kGray};
+int gMarkers[Nsets] = {20,24,21,25,23,27,29,30};
+int gColors[Nsets]={kBlack, kRed, kBlue, kDeepSea, kPink, kGray, kRed, kBlack};
 
 const int kMAXD       = 20; //maximal number of pT trigger bins
 const int kCENT       = 10; //maximal number of pT trigger bins
@@ -46,7 +50,7 @@ enum dataType { AA, pp };
 TH1D *hDeltaEtaSig[Nsets][2][kCENT][kMAXD][kMAXD]; // background substracted signal based on fit
 TH1D *hIAADeltaEtaSig[Nsets][kCENT][kMAXD][kMAXD]; // background substracted signal IAA
 
-TH1D *hRatioEP_DeltaEtaSig[3][kCENT][kMAXD][kMAXD]; //TPC V0A V0P
+TH1D *hRatioEP_DeltaEtaSig[Nsets][kCENT][kMAXD][kMAXD]; //Data TPC V0A V0P to AMPT inclusive
 
 TVector *TriggPtBorders;
 TVector *AssocPtBorders;
@@ -54,7 +58,7 @@ TVector *CentBinBorders;
 int NumCent[2];
 int NPTT;
 int NPTA;
-int iRef=0;
+int iRef=1;
 
 //------------------------------------------------------------------------------------------------
 void LoadData() {
@@ -93,12 +97,10 @@ void LoadData() {
 	for(int ic=0; ic<NumCent[AA]; ic++){
 		for(int iptt=0; iptt<NPTT; iptt++){
 			for(int ipta=0;ipta<NPTA;ipta++) {
-				hRatioEP_DeltaEtaSig[0][ic][iptt][ipta] = (TH1D*)hDeltaEtaSig[1][AA][ic][iptt][ipta]->Clone();
-				hRatioEP_DeltaEtaSig[0][ic][iptt][ipta]->Divide(hDeltaEtaSig[0][AA][ic][iptt][ipta]);
-				hRatioEP_DeltaEtaSig[1][ic][iptt][ipta] = (TH1D*)hDeltaEtaSig[3][AA][ic][iptt][ipta]->Clone();
-				hRatioEP_DeltaEtaSig[1][ic][iptt][ipta]->Divide(hDeltaEtaSig[2][AA][ic][iptt][ipta]);
-				hRatioEP_DeltaEtaSig[2][ic][iptt][ipta] = (TH1D*)hDeltaEtaSig[5][AA][ic][iptt][ipta]->Clone();
-				hRatioEP_DeltaEtaSig[2][ic][iptt][ipta]->Divide(hDeltaEtaSig[4][AA][ic][iptt][ipta]);
+				for(int i=0;i<Nsets;i++){
+					hRatioEP_DeltaEtaSig[i][ic][iptt][ipta] = (TH1D*)hDeltaEtaSig[i][AA][ic][iptt][ipta]->Clone();
+					hRatioEP_DeltaEtaSig[i][ic][iptt][ipta]->Divide(hDeltaEtaSig[iRef][AA][ic][iptt][ipta]);
+				}
 			} // ipta
 		} // iptt 
 	} // ic
@@ -110,13 +112,13 @@ void Compare(){
 	//int iPTT=3;
 	//int iPTA=2;
 	DrawSignal(3, 4);
-	/*
+	return;
 	for(int iptt=3; iptt<NPTT; iptt++){
-			for(int ipta=2;ipta<NPTA;ipta++) {
-				DrawSignal(iptt, ipta);
-			}
+		for(int ipta=2;ipta<NPTA-2;ipta++) {
+			DrawSignal(iptt, ipta);
+		}
 	}
-	*/
+	
 
 }
 
@@ -131,7 +133,7 @@ void DrawSignal(int iPTT, int iPTA) {
 		//==== Upper pad
 		TPad *p = fpad[ic]->GetPad(1); //upper pad
 		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
-		hy = hDeltaEtaSig[0][AA][ic][iPTT][iPTA]->GetMaximum()*1.2;
+		hy = hDeltaEtaSig[iRef][AA][ic][iPTT][iPTA]->GetMaximum()*1.2;
 		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
 		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d|#Delta#eta|",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 		hfr->Draw();
@@ -158,19 +160,19 @@ void DrawSignal(int iPTT, int iPTA) {
 		p = fpad[ic]->GetPad(2);
 		p->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();
 		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, lowIAA, highIAA);
-		hset( *hfr1, "|#Delta#eta|", "OUT/IN",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
+		hset( *hfr1, "|#Delta#eta|", Form("Ratio to %s",sLeg[iRef].Data()),1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
 		hfr1->Draw();
-		for(int i=0;i<3;i++) {
-			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[i*2]);
-			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerColor(gColors[i*2]);
-			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetLineColor(gColors[i*2]);
+		for(int i=0;i<Nsets;i++) {
+			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[i]);
+			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerColor(gColors[i]);
+			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetLineColor(gColors[i]);
 			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->Draw("p,same");
 		}
 		//for(int iS=0;iS<Nsets;iS++) {
 		//	hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[iS]);
 		//	hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->Draw("p,same");
 		//}
-		gPad->GetCanvas()->SaveAs(Form("figs/DeltaEta_OUTOIN_C%02dT%02dA%02d.pdf",ic,iPTT,iPTA));
+		//gPad->GetCanvas()->SaveAs(Form("figs/DeltaEta_OUTOIN_C%02dT%02dA%02d.pdf",ic,iPTT,iPTA));
 	}
 	//for(int ic=0;ic<NumCent[AA];ic++) delete fpad[ic];
 }
