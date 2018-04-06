@@ -181,8 +181,8 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	int iPTT=3;
 	int iPTA=4;
 
-	DrawBeforeFlip(iPTT, iPTA);
-	//DrawAfterFlip(iPTT, iPTA);
+	//DrawBeforeFlip(iPTT, iPTA);
+	DrawAfterFlip(iPTT, iPTA);
 	//DrawSignal(iPTT, iPTA);
 
 	if(saveRoot) {

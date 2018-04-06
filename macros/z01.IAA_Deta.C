@@ -495,10 +495,13 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 			for(int iptt=0; iptt<NumPtt; iptt++){
 				ntrigg = hTriggPtBin[idtyp][ic][iptt]->Integral();
 				for(int ipta=0;ipta<NumPta;ipta++) {
-					int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(-0.2); // Y axis : phi... 
-					int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(+0.2);
+					int phil = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(-0.2*TMath::Pi()); // Y axis : phi... 
+					int phih = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->FindBin(+0.2*TMath::Pi());
+					//HJ's finding... because of phi projection
+					double phiBinWidth = hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->GetYaxis()->GetBinWidth(1);
 					// Signal x:eta y:phi
 					hDeltaEta[idtyp][ic][iptt][ipta] = (TH1D*)hDphiAssoc2DIAA[idtyp][kSignal][ic][iptt][ipta]->ProjectionX(Form("hDeltaEtaType%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta),phil,phih); // phi near
+					hDeltaEta[idtyp][ic][iptt][ipta]->Scale(1.*phiBinWidth);
 					TString label;
 					label += Form(" %2.1f<p_{Tt}<%2.1f"	,(*TriggPtBorders[AA])[iptt+1],(*TriggPtBorders[AA])[iptt+2] );
 					label += Form(" #times %2.1f<p_{Ta}<%2.1f, ", (*AssocPtBorders[AA])[ipta+1],(*AssocPtBorders[AA])[ipta+2]);	 
