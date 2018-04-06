@@ -14,6 +14,8 @@ The macro than creates an output file with apropriate output name
 Analysis:
 
 z01.IAA_Deta.C
+.L z01.IAA_Deta.C
+run1();
 
 the near side delta eta distributions are corrected on mixed event
 in z and centrality bins. 
@@ -27,6 +29,8 @@ the near side Delta eta is corrected for residual wing correction ??
 
 
 z02.CalIAADeta.C
+.L z02.CalIAADeta.C
+run2();
 the bg is estimated with a fit  (peak = kaplan ,  bg =constant)
 bg  subtracted 1/Ntrigg * dN/deta are written to output
 
