@@ -4,6 +4,7 @@
 void LoadData();
 void compare();
 void DrawSignal(int iPTT, int iPTA);
+void DrawDataAMPT(int iPTT, int iPTA);
 
 double lowx=-0.8;
 double highx=0.8;
@@ -111,14 +112,14 @@ void Compare(){
 	LoadData();
 	//int iPTT=3;
 	//int iPTA=2;
-	DrawSignal(3, 4);
-	return;
-	for(int iptt=3; iptt<NPTT; iptt++){
-		for(int ipta=2;ipta<NPTA-2;ipta++) {
-			DrawSignal(iptt, ipta);
-		}
-	}
+	DrawDataAMPT(3,4);
+	//DrawSignal(3, 4);
 	
+	// for(int iptt=3; iptt<NPTT; iptt++){
+	// 	for(int ipta=2;ipta<NPTA-2;ipta++) {
+	// 		DrawSignal(iptt, ipta);
+	// 	}
+	// }
 
 }
 
@@ -168,11 +169,55 @@ void DrawSignal(int iPTT, int iPTA) {
 			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetLineColor(gColors[i]);
 			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->Draw("p,same");
 		}
-		//for(int iS=0;iS<Nsets;iS++) {
-		//	hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[iS]);
-		//	hIAADeltaEtaSig[iS][ic][iPTT][iPTA]->Draw("p,same");
-		//}
 		//gPad->GetCanvas()->SaveAs(Form("figs/DeltaEta_OUTOIN_C%02dT%02dA%02d.pdf",ic,iPTT,iPTA));
 	}
 	//for(int ic=0;ic<NumCent[AA];ic++) delete fpad[ic];
+}
+
+//------------------------------------------------------------------------------------------------
+void DrawDataAMPT(int iPTT, int iPTA) {
+	Filipad *fpad[NumCent[AA]];
+	lowx = -0.01;
+	for(int ic=0;ic<NumCent[AA];ic++){
+		fpad[ic] = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NumCent[AA]);
+		fpad[ic]->Draw();
+		//==== Upper pad
+		TPad *p = fpad[ic]->GetPad(1); //upper pad
+		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
+		hy = hDeltaEtaSig[iRef][AA][ic][iPTT][iPTA]->GetMaximum()*1.2;
+		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
+		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d|#Delta#eta|",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
+		hfr->Draw();
+		//Legend definition
+		TLegend *leg = new TLegend(0.45,0.4,0.85,0.78,"","brNDC");
+		leg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;
+
+		latexRun.DrawLatexNDC( 0.25, 0.85 ,strRun);
+
+		leg->AddEntry((TObject*)NULL,hDeltaEtaSig[0][AA][ic][iPTT][iPTA]->GetTitle(),"");
+
+		for(int iS=0;iS<2;iS++) {
+			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[iS]);
+			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->SetMarkerColor(gColors[iS]);
+			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->SetLineColor(gColors[iS]);
+			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->Draw("p,same");
+			leg->AddEntry(hDeltaEtaSig[iS][AA][ic][iPTT][iPTA],sLeg[iS],"pl");
+		}
+
+		
+		leg->Draw();
+
+		//==== Lower pad
+		p = fpad[ic]->GetPad(2);
+		p->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();
+		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, lowIAA, highIAA);
+		hset( *hfr1, "|#Delta#eta|", Form("Ratio to %s",sLeg[iRef].Data()),1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
+		hfr1->Draw();
+		for(int i=0;i<2;i++) {
+			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[i]);
+			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerColor(gColors[i]);
+			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetLineColor(gColors[i]);
+			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->Draw("p,same");
+		}
+	}
 }
