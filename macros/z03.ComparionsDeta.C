@@ -3,8 +3,8 @@
 
 void LoadData();
 void compare();
-void DrawSignal(int iPTT, int iPTA);
-void DrawDataAMPT(int iPTT, int iPTA);
+void DrawSignal(int padid, int iPTT, int iPTA);
+void DrawDataAMPT(int padid,int iPTT, int iPTA);
 
 double lowx=-0.8;
 double highx=0.8;
@@ -19,7 +19,8 @@ TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV, AMPT String Melting";
 const int Nsets = 8;
 TString infiles[Nsets] = {
 	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	//"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_TPC_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_TPC_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_V0A_E00_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -31,6 +32,7 @@ TFile *fin[Nsets];
 
 TString sLeg[Nsets] = {
 	"LHC10h",
+	//"Inclusive",
 	"Inclusive",
 	"TPC In",
 	"TPC Out",
@@ -112,8 +114,8 @@ void Compare(){
 	LoadData();
 	//int iPTT=3;
 	//int iPTA=2;
-	DrawDataAMPT(2,3);
-	//DrawSignal(3, 4);
+	DrawDataAMPT(1, 3,4);
+	DrawSignal(6, 3, 4);
 	
 	// for(int iptt=3; iptt<NPTT; iptt++){
 	// 	for(int ipta=2;ipta<NPTA-2;ipta++) {
@@ -125,11 +127,11 @@ void Compare(){
 
 
 //------------------------------------------------------------------------------------------------
-void DrawSignal(int iPTT, int iPTA) {
+void DrawSignal(int padID, int iPTT, int iPTA) {
 	Filipad *fpad[NumCent[AA]];
 	lowx = -0.01;
 	for(int ic=0;ic<NumCent[AA];ic++) {
-		fpad[ic] = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NumCent[AA]);
+		fpad[ic] = new Filipad(padID+ic+1, 1.1, 0.5, 100, 100, 0.7,NumCent[AA]);
 		fpad[ic]->Draw();
 		//==== Upper pad
 		TPad *p = fpad[ic]->GetPad(1); //upper pad
@@ -146,7 +148,7 @@ void DrawSignal(int iPTT, int iPTA) {
 
 		leg->AddEntry((TObject*)NULL,hDeltaEtaSig[0][AA][ic][iPTT][iPTA]->GetTitle(),"");
 
-		for(int iS=0;iS<Nsets;iS++) {
+		for(int iS=1;iS<Nsets;iS++) {
 			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[iS]);
 			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->SetMarkerColor(gColors[iS]);
 			hDeltaEtaSig[iS][AA][ic][iPTT][iPTA]->SetLineColor(gColors[iS]);
@@ -163,7 +165,7 @@ void DrawSignal(int iPTT, int iPTA) {
 		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, lowIAA, highIAA);
 		hset( *hfr1, "|#Delta#eta|", Form("Ratio to %s",sLeg[iRef].Data()),1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
 		hfr1->Draw();
-		for(int i=0;i<Nsets;i++) {
+		for(int i=1;i<Nsets;i++) {
 			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerStyle(gMarkers[i]);
 			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetMarkerColor(gColors[i]);
 			hRatioEP_DeltaEtaSig[i][ic][iPTT][iPTA]->SetLineColor(gColors[i]);
@@ -175,11 +177,11 @@ void DrawSignal(int iPTT, int iPTA) {
 }
 
 //------------------------------------------------------------------------------------------------
-void DrawDataAMPT(int iPTT, int iPTA) {
+void DrawDataAMPT(int padID, int iPTT, int iPTA) {
 	Filipad *fpad[NumCent[AA]];
 	lowx = -0.01;
 	for(int ic=0;ic<NumCent[AA];ic++){
-		fpad[ic] = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NumCent[AA]);
+		fpad[ic] = new Filipad(padID+ic+1, 1.1, 0.5, 100, 100, 0.7,NumCent[AA]);
 		fpad[ic]->Draw();
 		//==== Upper pad
 		TPad *p = fpad[ic]->GetPad(1); //upper pad

@@ -43,10 +43,10 @@ Bool_t mcTrue = kTRUE; //  RestoreTriangle
 
 void run1(){
 
-	const int NAA = 8;
+	const int NAA = 7;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5100_20180404-1855_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-951_20180404-1915-AMPT_LHC13f3c.root", // Inclusive
+		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5100_20180404-1855_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-964_20180407-1152-AMPT_LHC13f3c.root", // Inclusive
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-948_20180402-2121-AMPT_LHC13f3c.root",
@@ -55,8 +55,8 @@ void run1(){
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-949_20180402-2122-AMPT_LHC13f3c.root"
 	};
 	TString dirAA[NAA] = {
-		"JCIAA_TPCOnly_H0_T0",
-		"JCIAA_TPCOnly_H0_T0",
+		//"JCIAA_TPCOnly_H0_T0",
+		"JCIAA_EPInclusive",
 		"JCIAA_TPC_E00",
 		"JCIAA_TPC_E90",
 		"JCIAA_V0A_E00",
@@ -65,7 +65,7 @@ void run1(){
 		"JCIAA_V0P_E90",
 	};
 	TString commentAA[NAA] = {
-		"LHC10h_AOD86_MgFpMgFm",
+		//"LHC10h_AOD86_MgFpMgFm",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
@@ -608,7 +608,7 @@ double NormalizationFactor(TH2D *MixedHisto) {
 	int nbins = 0;
 
 	for (int iybin = 2; iybin < ybinmax; iybin++) {
-		if (iybin > MixedHisto->GetYaxis()->FindBin(-0.2) && iybin < MixedHisto->GetYaxis()->FindBin(0.2)) continue;
+		//if (iybin > MixedHisto->GetYaxis()->FindBin(-0.2) && iybin < MixedHisto->GetYaxis()->FindBin(0.2)) continue;
 		content += MixedHisto->GetBinContent(xbin, iybin);
 		nbins++;
 	}
