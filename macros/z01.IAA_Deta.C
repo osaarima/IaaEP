@@ -75,16 +75,21 @@ void run1(){
 		"AMPT_LHC13f3c"
 	};
 
-	const int NPP = 1;
+	const int NPP = 2;
 	TString dirPP[NPP] = {
-		"JCIAA_GlobalSDD_H0_T0"
+		//"JCIAA_GlobalSDD_H0_T0"
+		"JCIaa",
+		"JCIaa"
 	};
 
 	TString filePP[NPP] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+		"legotrain_JCIaa/data/JCIaa_pythia8230_pp2.76TeV_SoftQCD-2760.root",
+		"legotrain_JCIaa/data/JCIaa_pythia8230_pp2.76TeV_pythia_config_ATLAS.root"
 	};
 	TString commentPP[NPP] = {
-		"LHC11a_p4_AOD113_noSDD"
+		"pythia8230_pp2.76TeV_SoftQCD",
+		"pythia8230_pp2.76TeV_CfgATLAS"
 	};
 
 	// Moon
@@ -92,7 +97,7 @@ void run1(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<NAA;iA++) {
+	for(int iA=0;iA<1;iA++) {
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
@@ -125,8 +130,9 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	fin[pp] = TFile::Open(ppInFile);
 	//fmix = new TFile("mergedmixDJ_Cut1.root","read");
 
-	TString TopDir[2] = {dirAA,"JCIAA_GlobalSDD_H0_T0"};
+	TString TopDir[2] = {dirAA,dirPP};
 	cout << TopDir[0] << endl;
+	cout << TopDir[1] << endl;
 
 	double bgnEta[2] = {bgRbegin,bgRend}; //  ietaBckThr=5 R=1.0
 
@@ -144,7 +150,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 		zVertBins[idtyp]				   = (TVector*) fin[idtyp]->Get(TopDir[idtyp]+"/JCard/zVertBins");
 	}
 	// Temporary
-	int nzvtx[2] = { 1, zVertBins[pp]->GetNoElements()-1}; 
+	int nzvtx[2] = { zVertBins[AA]->GetNoElements()-1, zVertBins[pp]->GetNoElements()-1}; 
 
 
 	cout <<"++++++++++++++++  Settings +++++++++++++++++++++++++++++++++++++++++++++++++++++++++"<<endl;
