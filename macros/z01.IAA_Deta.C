@@ -75,21 +75,18 @@ void run1(){
 		"AMPT_LHC13f3c"
 	};
 
-	const int NPP = 2;
+	const int NPP = 1;
 	TString dirPP[NPP] = {
 		//"JCIAA_GlobalSDD_H0_T0"
-		"JCIaa",
 		"JCIaa"
 	};
 
 	TString filePP[NPP] = {
 		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
-		"legotrain_JCIaa/data/JCIaa_pythia8230_pp2.76TeV_SoftQCD-2760.root",
-		"legotrain_JCIaa/data/JCIaa_pythia8230_pp2.76TeV_pythia_config_ATLAS.root"
+		"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-CfgATLAS.root"
 	};
 	TString commentPP[NPP] = {
-		"pythia8230_pp2.76TeV_SoftQCD",
-		"pythia8230_pp2.76TeV_CfgATLAS"
+		"pythia8230_pp2.76TeV_GF0_CfgATLAS"
 	};
 
 	// Moon
@@ -97,7 +94,7 @@ void run1(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<1;iA++) {
+	for(int iA=0;iA<NAA;iA++) {
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
@@ -274,6 +271,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 						}
 						if(idtyp==pp) {
 							for(int iz=0; iz<nzvtx[idtyp]; iz++){
+								cout << Form("%s/hDphiDetaPta/hDphiDetaPtaD%02dC%02dV%02dT%02dA%02d",TopDir[idtyp].Data(), ityp, ic, iz, iptt, ipta) << endl;
 								hDphiAssoc2DIAAVtxPP[ityp][iz][ic][iptt][ipta] = (TH2D *)fin[idtyp]->Get(Form("%s/AliJHistos/hDphiDetaPta/hDphiDetaPtaD%02dC%02dV%02dT%02dA%02d", TopDir[idtyp].Data(), ityp, ic, iz, iptt, ipta));
 								hDphiAssoc2DIAAVtxPP[ityp][iz][ic][iptt][ipta]->SetXTitle("#Delta#eta");
 								hDphiAssoc2DIAAVtxPP[ityp][iz][ic][iptt][ipta]->GetXaxis()->CenterTitle(kTRUE);
