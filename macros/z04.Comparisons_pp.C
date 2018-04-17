@@ -13,7 +13,7 @@ double lowIAA = -0.2;
 double highIAA = 2.2;
 
 TLatex latexRun;
-TString strRun = "pp #sqrt{#it{s} = 2.76 TeV";
+TString strRun = "pp #sqrt{#it{s}} = 2.76 TeV";
 
 const int Nsets = 3;
 TString infiles[Nsets] = {
