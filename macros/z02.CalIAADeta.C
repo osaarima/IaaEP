@@ -53,8 +53,9 @@ TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
 void run2() {
 
-	const int Nsets = 8;
+	const int Nsets = 9;
 	TString infiles[Nsets] = {
+		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_LHC10h_AOD86_MgFpMgFm_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_TPC_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -74,7 +75,7 @@ void run2() {
 		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
 		//cout << outrootname[i] << endl;
 	}
-	for(int i=0;i<Nsets;i++) { 
+	for(int i=0;i<1;i++) { 
 		DoAnalysis(infiles[i],outrootname[i]);
 	}
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");

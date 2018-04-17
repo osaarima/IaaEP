@@ -43,9 +43,10 @@ Bool_t mcTrue = kTRUE; //  RestoreTriangle
 
 void run1(){
 
-	const int NAA = 7;
+	const int NAA = 8;
 	TString fileAA[NAA] = {
-		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5100_20180404-1855_runlist_3-LHC10h_AOD86_MgFpMgFm.root",
+		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb-5100_20180404-1855_runlist_3-LHC10h_AOD86_MgFpMgFm.root", // > 0-0.8
+		"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5217_20180416-1933_runlist_3-LHC10h_AOD86_MgFpMgFm.root", // -0.8-0.8
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-964_20180407-1152-AMPT_LHC13f3c.root", // Inclusive
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
@@ -56,6 +57,7 @@ void run1(){
 	};
 	TString dirAA[NAA] = {
 		//"JCIAA_TPCOnly_H0_T0",
+		"JCIAA_TPCOnly_H0_T0",
 		"JCIAA_EPInclusive",
 		"JCIAA_TPC_E00",
 		"JCIAA_TPC_E90",
@@ -65,7 +67,7 @@ void run1(){
 		"JCIAA_V0P_E90",
 	};
 	TString commentAA[NAA] = {
-		//"LHC10h_AOD86_MgFpMgFm",
+		"LHC10h_AOD86_MgFpMgFm_5217",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
@@ -77,17 +79,18 @@ void run1(){
 
 	const int NPP = 1;
 	TString dirPP[NPP] = {
-		//"JCIAA_GlobalSDD_H0_T0"
-		"JCIaa"
+		"JCIAA_GlobalSDD_H0_T0"
+		//"JCIaa"
 	};
 
 	TString filePP[NPP] = {
-		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
-		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-CfgATLAS.root"
-		"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-configSoftQCD.root"
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
+		////"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-CfgATLAS.root"
+		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-configSoftQCD.root"
 	};
 	TString commentPP[NPP] = {
-		"pythia8230_pp2.76TeV_GF0_SoftQCD"
+		//"pythia8230_pp2.76TeV_GF0_SoftQCD"
+		"LHC11a_p4_AOD113_noSDD"
 	};
 
 	// Moon
@@ -95,7 +98,7 @@ void run1(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<NAA;iA++) {
+	for(int iA=0;iA<1;iA++) {
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
