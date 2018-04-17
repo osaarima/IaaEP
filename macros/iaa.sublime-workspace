@@ -1,0 +1,602 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"leg",
+				"legotrain_JCIaa"
+			],
+			[
+				"GetBin",
+				"GetBinWidth"
+			],
+			[
+				"ph",
+				"phiBinWidth"
+			],
+			[
+				"GetB",
+				"GetBinWidth"
+			],
+			[
+				"SetMarker",
+				"SetMarkerColor"
+			],
+			[
+				"iP",
+				"iPTA"
+			],
+			[
+				"fit",
+				"fitRange"
+			],
+			[
+				"hI",
+				"hIAAEta"
+			],
+			[
+				"hDe",
+				"hDeltaEtaAA"
+			],
+			[
+				"To",
+				"TopDirPP"
+			],
+			[
+				"Do",
+				"DoAnalysis"
+			],
+			[
+				"d",
+				"drawLowOrder"
+			],
+			[
+				"Ge",
+				"GetTitle"
+			],
+			[
+				"g",
+				"gColor"
+			],
+			[
+				"SetMark",
+				"SetMarkerColor"
+			],
+			[
+				"run",
+				"vn_run2"
+			],
+			[
+				"p",
+				"printf\tprintf …"
+			],
+			[
+				"Get",
+				"Get"
+			],
+			[
+				"kN",
+				"kNSC"
+			],
+			[
+				"kNA",
+				"kNAMPT"
+			],
+			[
+				"TGra",
+				"TGraphErrors"
+			],
+			[
+				"gr_ALICE_Pub_vn_QC_",
+				"gr_ALICE_Pub_vn_QC_Run1"
+			],
+			[
+				"gr",
+				"gr_vn_run2"
+			],
+			[
+				"A",
+				"AddEntry"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "z01.IAA_Deta.C",
+			"settings":
+			{
+				"buffer_size": 37269,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "z02.CalIAADeta.C",
+			"settings":
+			{
+				"buffer_size": 16926,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "z03.ComparionsDeta.C",
+			"settings":
+			{
+				"buffer_size": 8956,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "include/JStringInfo.h",
+			"settings":
+			{
+				"buffer_size": 3413,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"reindent",
+				"Indentation: Reindent Lines"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/djkim/cernbox_mjj/Macros/Compare_RawPtPair_Cent.C",
+		"/Users/djkim/cernbox/iaa/1006.PbPbIaa/ptdist2D_zMix.C",
+		"/Users/djkim/Dropbox/jfluc/common/single_vn/vn_mult.C",
+		"/Users/djkim/cernbox/iaa/1006.PbPbIaa/IAA_Deta.C",
+		"/Users/djkim/myrootmac/rootalias_lec.C",
+		"/Users/djkim/work/402.ptdist2D/ptdist2D.C",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/Include/JHisto.h",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/JJT.h",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/Include/JtFileNameManager.h",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/jt_comparison_PbPb.C",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/jt.C",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/CopyCard.C",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/Include/JStringInfo.h",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/Include/JFileContent.h",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/Include/JSignalExtractor.h",
+		"/Users/djkim/work/1005.PbPbJT/jtkt/jt_dist_comparison_assobin.C",
+		"/Users/djkim/Downloads/IOPEXPORT_BIB.bib",
+		"/Users/djkim/Dropbox/jfluc/common/vn_ptmin/Draw_QConly_Fig3_vpt.C",
+		"/Users/djkim/GitHub/paper_figure_QC_only/Draw_QConly_Fig456.C",
+		"/Users/djkim/GitHub/paper_figure_QC_only/Draw_QConly_Fig89.C",
+		"/Users/djkim/GitHub/paper_figure_QC_only/Draw_QConly_Fig2.C",
+		"/Users/djkim/Dropbox/jfluc/NL/plot_hsjet_lhc15o_rhoN.py",
+		"/Users/djkim/GitHub/paper_figure_QC_only/Draw_QConly_Fig1.C",
+		"/Users/djkim/Library/Containers/com.apple.mail/Data/Library/Mail Downloads/9B1D0B33-0538-4139-AF1E-19D5EA78865C/paper.pdf",
+		"/Users/djkim/GitHub/paper_figure_QC_only/draw_chiqndfbest_3pad.py",
+		"/Users/djkim/Documents/Conference-talk/talks/QM2018/sec_analysis_spectra.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/QM2018/sec_analysis_EPNL.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/QM2018/sec_analysis_SC.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/QM2018/sec_flow_summary.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/QM2018/sec_analysis_summary.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/QM2018/sec_machcone.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/QM2018/sec_analysis.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/QM2018/sec_EPNL.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/PPD2017/sec_machcone.tex",
+		"/Users/djkim/Dropbox/jfluc/NL/plot_hs_lhc15o_chiN.py",
+		"/Users/djkim/Dropbox/jfluc/NL/plot_hs_lhc15o_rhoN.py",
+		"/Users/djkim/Dropbox/jfluc/NL/plot_hs_ampt_chiN.py",
+		"/Users/djkim/Dropbox/jfluc/NL/plot_hs_ampt_rhoN.py",
+		"/Users/djkim/Documents/Conference-talk/talks/PPD2017/sec_introD.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/PPD2017/sec_result_SC.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/PPD2017/sec_summary.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/PPD2017/sec_hf.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/PPD2017/sec_HI.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/PPD2017/sec_intro_chi.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_introD.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_machcone.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_result_SC.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_backup.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_intro_chi.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_analysis_summary.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_flow_smallsystem.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_intro_qhat_etas.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_result_old.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_result_SC_sum.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_result_NL.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_analysis_SC.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_discussions.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_result_old.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_issummary.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/sec_Intro.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/hpt.sublime-workspace",
+		"/Users/djkim/Documents/Conference-talk/talks/HighPT2017/hpt.sublime-project",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_introD.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_result_new.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_intro_chi.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_backup.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_result_NL.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_result_EP.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_details_EP.tex",
+		"/Users/djkim/SyncCom/Sync/EbECorr/HSInterplay/vn_HS.C",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_Intro.tex",
+		"/Users/djkim/Documents/Conference-talk/talks/IS2017/sec_result_pre.tex",
+		"/Users/djkim/SyncCom/Sync/EbECorr/HSInterplay/Comparison_SC_HS_all.C",
+		"/Users/djkim/SyncCom/Sync/EbECorr/HSInterplay/HS_data_config_NSC_S1.h",
+		"/Users/djkim/SyncCom/Sync/EbECorr/Presentations/HSInterplay/sec_analysis_spectra.tex",
+		"/Users/djkim/Dropbox/2017-08-SAB/sec_SC.tex",
+		"/Users/djkim/Dropbox/jfluc/common/1.resultsGraphs/hardsoft_results.py",
+		"/Users/djkim/Dropbox/2017-08-SAB/sec_jt.tex",
+		"/Users/djkim/Dropbox/jfluc/common/1.resultsGraphs/jfflucresults.py",
+		"/Users/djkim/SyncCom/Sync/EbECorr/HSInterplay/JFFlucResults_0720.C",
+		"/Users/djkim/Dropbox/2017-08-SAB/sec_intro.tex",
+		"/Users/djkim/Dropbox/2017-08-SAB/sec_jets.tex",
+		"/Users/djkim/Dropbox/jfluc/common/1.resultsGraphs/jfflucresults.cpp",
+		"/Users/djkim/SyncCom/Sync/EbECorr/Presentations/HSInterplay/sec_analysis_vn.tex",
+		"/Users/djkim/SyncCom/Sync/EbECorr/Presentations/HSInterplay/sec_summary.tex",
+		"/Users/djkim/SyncCom/Sync/EbECorr/Presentations/HSInterplay/sec_analysis_intro.tex",
+		"/Users/djkim/SyncCom/Sync/EbECorr/Presentations/HSInterplay/sec_intro.tex",
+		"/Users/djkim/Dropbox/jfluc/common/1.resultsGraphs/plot_vna.py",
+		"/Users/djkim/Dropbox/jfluc/common/1.resultsGraphs/observables.h",
+		"/Users/djkim/SyncCom/Sync/EbECorr/Presentations/HSInterplay/sec_SC_intro.tex",
+		"/Users/djkim/SyncCom/Sync/EbECorr/Presentations/HSInterplay/sec_analysis_SC.tex",
+		"/Users/djkim/SyncCom/Sync/EbECorr/HSInterplay/Comparison_NSC_HS_all.C",
+		"/Users/djkim/SyncCom/Sync/EbECorr/HSInterplay/HS_data_config_SC_S1.h",
+		"/Users/djkim/SyncCom/Sync/EbECorr/HSInterplay/HS_data_config_SC_S2_Jet.h",
+		"/Users/djkim/SyncCom/Sync/EbECorr/HSInterplay/HS_data_config_NSC_S2_Jet.h",
+		"/Users/djkim/GitHub/paper_figure_QC_only/draw_fig1.py",
+		"/Users/djkim/GitHub/paper_figure_QC_only/draw_chiqbest_3pad.py",
+		"/Users/djkim/Dropbox/jfluc/common/single_vn/vn_mod.py",
+		"/Users/djkim/GitHub/paper_figure_QC_only/draw_chiqbest.py",
+		"/Users/djkim/GitHub/paper_figure_QC_only/draw_chiq.cpp",
+		"/Users/djkim/GitHub/paper_figure_QC_only/Draw_QConly_Fig345.C",
+		"/Users/djkim/GitHub/paper_figure_QC_only/JmxnTPad.h",
+		"/Users/djkim/GitHub/paper_figure_QC_only/Draw_QConly_Fig67.C",
+		"/Users/djkim/GitHub/paper_figure_QC_only/draw_chiq_multi.cpp",
+		"/Users/djkim/Dropbox/jfluc/common/single_vn/5tev/Fig1_modified.C",
+		"/Users/djkim/Dropbox/jfluc/common/single_vn/vn_run2.C",
+		"/Users/djkim/Dropbox/jfluc/common/single_vn/5tev/Fig1.C",
+		"/Users/djkim/GitHub/paperQConly/longSC.tex"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"Reading",
+			"reading",
+			"zVertBins",
+			"iRef",
+			"oname",
+			"g2D",
+			"NormalizeToBinWidth2D",
+			"WingNorm",
+			"NormalizationFactor",
+			"kReal",
+			"hDphiAssoc2DIAA",
+			"correctMix",
+			"hDphiAssoc2DIAA[",
+			"hDphiAssoc2DIAA",
+			"hDphiAssoc2DIAA[idtyp]",
+			"NormalizationFactor",
+			"fmaxEtaRange",
+			"cout",
+			"Number of Trigger particles",
+			"hDphiAssoc2DIAA",
+			"mixpta",
+			"doMixMerge",
+			"Scale",
+			"bw",
+			"NormalizeToBinWidth2D",
+			"GetBinWidth",
+			"Scale",
+			"width",
+			"Flip",
+			"hIAADeltaEtaSig",
+			"hDeltaEta",
+			"NC",
+			"oname",
+			"fIgnoreCase",
+			"saveRoot",
+			"saveDeta",
+			"saveRoot",
+			"TFile",
+			"rs : rb",
+			"oname",
+			"Reading",
+			"JCIAA_V0A_E00",
+			"prefix",
+			"oname",
+			"TFile",
+			"FitPeakConst1",
+			"hIAADetaEtaSig",
+			"hDeltaEtaSig",
+			"hDeltaEtaFlip",
+			"fKaplan",
+			"bPrintFigs",
+			"strRun",
+			"lowx",
+			"hDeltaEta",
+			"Filip",
+			"FFilip",
+			"Flip",
+			"NumCent",
+			"fillType",
+			"prefix",
+			"hDphiAssoc2DIAA",
+			"hDeltaEta",
+			"subtractflow",
+			"drawWingCorr",
+			"draw2D",
+			"drawYield",
+			"drawIAA",
+			"prefix"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"void DrawSignal(int iPTT, int iPTA) {\n\tlowx = -0.01;\n\tfor(int ic=0;ic<NC;ic++) {\n\t\tFilipad *fpad = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NC);\n\t\tfpad->Draw();\n\t\t//==== Upper pad\n\t\tTPad *p = fpad->GetPad(1); //upper pad\n\t\tp->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();\n\t\tTH2F *hfr = new TH2F(\"hfr\",\" \", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y\n\t\thset( *hfr, \"#Delta#eta\", \"1/N_{trigg} dN/d#Delta#eta\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis\n\t\thfr->Draw();\n\t\t//Legend definition\n\t\tTLegend *leg = new TLegend(0.25,0.50,0.85,0.82,\"\",\"brNDC\");\n\t\tleg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;\n\n\t\tlatexRun.DrawLatexNDC( 0.47, 0.09 ,strRun);\n\n\t\thDeltaEtaFlip[AA][ic][iPTT][iPTA]->SetMarkerStyle(21);\n\t\thDeltaEtaFlip[AA][ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\thDeltaEtaFlip[pp][0][iPTT][iPTA]->SetMarkerStyle(25);\n\t\thDeltaEtaFlip[pp][0][iPTT][iPTA]->Draw(\"p,same\");\n\t\tfKaplan[AA][ic][iPTT][iPTA]->Draw(\"same\");\n\t\tfKaplan[pp][0][iPTT][iPTA]->Draw(\"same\");\n\n\t\tleg->AddEntry(hDeltaEtaFlip[AA][ic][iPTT][iPTA],hDeltaEtaFlip[AA][ic][iPTT][iPTA]->GetTitle(),\"p\");\n\t\tleg->AddEntry(hDeltaEtaFlip[pp][0][iPTT][iPTA],hDeltaEtaFlip[pp][0][iPTT][iPTA]->GetTitle(),\"p\");\n\t\t\n\t\tleg->Draw();\n\n\t\t//==== Lower pad\n\t\tp = fpad->GetPad(2);\n\t\tp->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();\n\t\tTH2F *hfr1 = new TH2F(\"hfr1\",\" \", 100, lowx, highx, 10, lowIAA, highIAA);\n\t\thset( *hfr1, \"#Delta#eta\", \"AA/pp\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);\n\t\thfr1->Draw();\n\t\thIAADeltaEtaFlip[ic][iPTT][iPTA]->SetMarkerStyle(21);\n\t\thIAADeltaEtaFlip[ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\t//gPad->GetCanvas()->SaveAs(Form(\"figs_svn/FigA4_v%d_modelcomparisonBest.eps\",i+2));\n\t}\n}"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "z01.IAA_Deta.C",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 37269,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11890,
+								11890
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 523.0,
+						"translation.y": 3741.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "z02.CalIAADeta.C",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 16926,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8193,
+								8296
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2550.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "z03.ComparionsDeta.C",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8956,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1462,
+								1462
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "include/JStringInfo.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3413,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2079,
+								2079
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 318.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 100.0
+	},
+	"pinned_build_system": "",
+	"project": "iaa.sublime-project",
+	"replace":
+	{
+		"height": 1234.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
