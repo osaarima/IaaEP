@@ -5,8 +5,8 @@ void LoadData();
 void compare();
 void DrawPP(int padID, int iPTT, int iPTA);
 
-double lowx=-0.8;
-double highx=0.8;
+double lowx=-0.1;
+double highx=0.6;
 double ly = -0.05;
 double hy = 0.3;
 double lowIAA = -0.2;
@@ -17,7 +17,7 @@ TString strRun = "pp #sqrt{#it{s}} = 2.76 TeV";
 
 const int Nsets = 3;
 TString infiles[Nsets] = {
-	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_CfgATLAS_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
@@ -25,8 +25,8 @@ TFile *fin[Nsets];
 
 TString sLeg[Nsets] = {
 	"data",
-	"CfgATLAS",
-	"SoftQCD"
+	"pythia8230 CfgATLAS",
+	"pythia8230 SoftQCD"
 };
 
 int gMarkers[] = {20,24,21,25,23,27,29,30};
@@ -142,5 +142,5 @@ void DrawPP(int padID, int iPTT, int iPTA) {
 		for(int i=0;i<Nsets;i++){
 			hRatiosPP[i]->Draw("p,same");
 		}
-		//gPad->GetCanvas()->SaveAs(Form("figs/DeltaEta_OUTOIN_C%02dT%02dA%02d.pdf",ic,iPTT,iPTA));
+		gPad->GetCanvas()->SaveAs(Form("figs_iaa/DeltaEta_ppComparison_T%02dA%02d.pdf",iPTT,iPTA));
 	}
