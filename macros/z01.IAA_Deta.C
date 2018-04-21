@@ -87,8 +87,8 @@ void run1(){
 
 	TString filePP[NPP] = {
 		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-493_20180416-1801-LHC12f1a_Pythia_2760GeV.root",
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-494_20180416-1802-LHC12f1b_Phojet_2760GeV.root"
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-504_20180420-2348-LHC12f1a_Pythia_2760GeV.root",
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-505_20180420-2348-LHC12f1b_Phojet_2760GeV.root"
 		////"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-CfgATLAS.root"
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-configSoftQCD.root"
 	};
