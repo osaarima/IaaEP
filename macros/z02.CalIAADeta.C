@@ -53,12 +53,13 @@ TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
 void run2() {
 
-	const int Nsets = 11;
+	const int Nsets = 12;
 	TString infiles[Nsets] = {
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_WD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_WD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_LHC15o_TPCOnly_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-		"sysErrors/_LHC10h_AOD86_MgFpMgFm_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_TPC_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_TPC_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -77,7 +78,7 @@ void run2() {
 		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
 		//cout << outrootname[i] << endl;
 	}
-	for(int i=0;i<2;i++) { 
+	for(int i=0;i<Nsets;i++) { 
 		DoAnalysis(infiles[i],outrootname[i]);
 	}
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
@@ -99,7 +100,7 @@ void DoAnalysis(TString inFile="sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_N
 	AssocPtBorders             = (TVector*) fin->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin->Get("CentBinBorders");
 
-	int NumCent[2]    = { CentBinBorders->GetNoElements()-1, 1}; 
+	int NumCent[2]    = { CentBinBorders->GetNoElements()-2, 1}; 
 	int NumPtt     = TriggPtBorders->GetNoElements()-1;
 	int NumPta     = AssocPtBorders->GetNoElements()-1;
 	cout <<"PbPb"<<endl;

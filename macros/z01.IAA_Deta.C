@@ -59,7 +59,7 @@ void run1(){
 	TString dirAA[NAA] = {
 		//"JCIAA_TPCOnly_H0_T0",
 		//"JCIAA_GlobalSDD",
-		//"JCIAA_TPCOnly",
+		///"JCIAA_TPCOnly",
 		"JCIAA_EPInclusive",
 		"JCIAA_TPC_E00",
 		"JCIAA_TPC_E90",
@@ -81,29 +81,29 @@ void run1(){
 		"AMPT_LHC13f3c"
 	};
 
-	const int NPP = 1;
+	const int NPP = 2;
 	TString dirPP[NPP] = {
 		//"JCIAA_GlobalSDD_H0_T0"
-		"JCIaa"
+		//"JCIaa"
 		//"JCIAA_GlobalSDD"
-		//"JCIAA_KineOnly",
-		//"JCIAA_KineOnly"
+		"JCIAA_KineOnly",
+		"JCIAA_KineOnly"
 	};
 
 	TString filePP[NPP] = {
 		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
-		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-504_20180420-2348-LHC12f1a_Pythia_2760GeV.root",
-		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-505_20180420-2348-LHC12f1b_Phojet_2760GeV.root"
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-504_20180420-2348-LHC12f1a_Pythia_2760GeV.root",
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-505_20180420-2348-LHC12f1b_Phojet_2760GeV.root"
 		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp-1773_20180423-1806-LHC17p_pass1_CENT_woSDD.root" // 5TeV pp
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-CfgATLAS.root"
-		"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-configSoftQCD.root"
+		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-configSoftQCD.root"
 	};
 	TString commentPP[NPP] = {
-		"pythia8230_pp2.76TeV_GF0_SoftQCD"
+		//"pythia8230_pp2.76TeV_GF0_SoftQCD"
 		//"LHC11a_p4_AOD113_noSDD"
 		//"LHC17p_pass1_CENT_woSDD"
-		//"LHC12f1a_Pythia_2760GeV",
-		//"LHC12f1b_Phojet_2760GeV"
+		"LHC12f1a_Pythia_2760GeV",
+		"LHC12f1b_Phojet_2760GeV"
 	};
 
 	// Moon
@@ -111,7 +111,7 @@ void run1(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<NAA;iA++) { // NAA
+	for(int iA=0;iA<1;iA++) { // NAA
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
