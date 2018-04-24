@@ -43,11 +43,11 @@ Bool_t mcTrue = kTRUE; //  RestoreTriangle
 
 void run1(){
 
-	const int NAA = 9;
+	const int NAA = 7;
 	TString fileAA[NAA] = {
 		//"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5217_20180416-1933_runlist_3-LHC10h_AOD86_MgFpMgFm.root", // -0.8-0.8
-		"legotrain_JCIaa/data/JCIaa_legotrain_GlobalSDD_CF_PbPb-5146_20180411-2232_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5275_20180421-1543_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root", // 5TeV
+		//"legotrain_JCIaa/data/JCIaa_legotrain_GlobalSDD_CF_PbPb-5146_20180411-2232_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root",
+		//"legotrain_JCIaa/data/JCIaa_legotrain_TPCOnly_CF_PbPb-5275_20180421-1543_runlist_3-LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs.root", // 5TeV
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-964_20180407-1152-AMPT_LHC13f3c.root", // Inclusive
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
 		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
@@ -58,8 +58,8 @@ void run1(){
 	};
 	TString dirAA[NAA] = {
 		//"JCIAA_TPCOnly_H0_T0",
-		"JCIAA_GlobalSDD",
-		"JCIAA_TPCOnly",
+		//"JCIAA_GlobalSDD",
+		//"JCIAA_TPCOnly",
 		"JCIAA_EPInclusive",
 		"JCIAA_TPC_E00",
 		"JCIAA_TPC_E90",
@@ -70,8 +70,8 @@ void run1(){
 	};
 	TString commentAA[NAA] = {
 		//"LHC10h_AOD86_MgFpMgFm_5217",
-		"LHC15o_GlobalSDD",
-		"LHC15o_TPCOnly",
+		//"LHC15o_GlobalSDD",
+		//"LHC15o_TPCOnly",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
@@ -84,8 +84,8 @@ void run1(){
 	const int NPP = 1;
 	TString dirPP[NPP] = {
 		//"JCIAA_GlobalSDD_H0_T0"
-		//"JCIaa"
-		"JCIAA_GlobalSDD"
+		"JCIaa"
+		//"JCIAA_GlobalSDD"
 		//"JCIAA_KineOnly",
 		//"JCIAA_KineOnly"
 	};
@@ -94,14 +94,14 @@ void run1(){
 		//"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root"
 		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-504_20180420-2348-LHC12f1a_Pythia_2760GeV.root",
 		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-505_20180420-2348-LHC12f1b_Phojet_2760GeV.root"
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp-1773_20180423-1806-LHC17p_pass1_CENT_woSDD.root" // 5TeV pp
-		////"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-CfgATLAS.root"
-		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-configSoftQCD.root"
+		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp-1773_20180423-1806-LHC17p_pass1_CENT_woSDD.root" // 5TeV pp
+		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-CfgATLAS.root"
+		"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-configSoftQCD.root"
 	};
 	TString commentPP[NPP] = {
-		//"pythia8230_pp2.76TeV_GF0_SoftQCD"
+		"pythia8230_pp2.76TeV_GF0_SoftQCD"
 		//"LHC11a_p4_AOD113_noSDD"
-		"LHC17p_pass1_CENT_woSDD"
+		//"LHC17p_pass1_CENT_woSDD"
 		//"LHC12f1a_Pythia_2760GeV",
 		//"LHC12f1b_Phojet_2760GeV"
 	};
@@ -111,7 +111,7 @@ void run1(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<1;iA++) { // NAA
+	for(int iA=0;iA<NAA;iA++) { // NAA
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
@@ -207,7 +207,7 @@ void DoAnalysis(double sgnEta=0.2, double bgRbegin=1.0, double bgRend=1.6, doubl
 	cout <<"pp"<<endl;
 	cout <<"bins:  "<<" eta="<< NumEtaGaps <<" zvtx="<<nzvtx[pp]<< endl; 
 
-	int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-2, 1};  // 5TEV data less cent
+	int NumCent[2]    = { CentBinBorders[AA]->GetNoElements()-1, 1};  // 5TEV data less cent 1
 	NumEtaGaps = EtaGapThresholds[AA]->GetNoElements()-1; 
 	int NumPtt     = TriggPtBorders[AA]->GetNoElements()-1;
 	int NumPta     = AssocPtBorders[AA]->GetNoElements()-1;
