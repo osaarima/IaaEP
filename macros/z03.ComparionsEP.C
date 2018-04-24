@@ -71,7 +71,7 @@ void LoadData() {
 	TriggPtBorders             = (TVector*) fin[irefD]->Get("TriggPtBorders");
 	AssocPtBorders             = (TVector*) fin[irefD]->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin[irefD]->Get("CentBinBorders");
-	NumCent[AA]    = CentBinBorders->GetNoElements()-1;
+	NumCent[AA]    = CentBinBorders->GetNoElements()-2; // for 5TeV
 	NumCent[pp]    = 1; 
 	NPTT     = TriggPtBorders->GetNoElements()-1;
 	NPTA     = AssocPtBorders->GetNoElements()-1;

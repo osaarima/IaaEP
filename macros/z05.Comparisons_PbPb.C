@@ -16,15 +16,19 @@ double highIAA = 5.2;
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
-const int Nsets = 2;
+const int Nsets = 4;
 TString infiles[Nsets] = {
 	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_LHC15o_TPCOnly_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
 TFile *fin[Nsets];
 
 TString sLeg[Nsets] = {
-	"LHC10h",
+	"LHC10h, TPCOnly",
+	"LHC15o, GlobalSDD",
+	"LHC15o, TPCOnly",
 	"AMPT String melting"
 };
 
@@ -61,7 +65,7 @@ void LoadData() {
 	TriggPtBorders             = (TVector*) fin[irefD]->Get("TriggPtBorders");
 	AssocPtBorders             = (TVector*) fin[irefD]->Get("AssocPtBorders");
 	CentBinBorders             = (TVector*) fin[irefD]->Get("CentBinBorders");
-	NumCent[AA]    = CentBinBorders->GetNoElements()-1;
+	NumCent[AA]    = CentBinBorders->GetNoElements()-2;  // 5TeV 1 less cent
 	NumCent[pp]    = 1; 
 	NPTT     = TriggPtBorders->GetNoElements()-1;
 	NPTA     = AssocPtBorders->GetNoElements()-1;

@@ -15,27 +15,22 @@ double highIAA = 2.2;
 TLatex latexRun;
 TString strRun = "pp #sqrt{#it{s}} = 2.76 TeV";
 
-const int Nsets = 7;
+const int Nsets = 5;
 TString infiles[Nsets] = {
 	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_CfgATLAS_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_WD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_WD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
-
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
 TFile *fin[Nsets];
 
 TString sLeg[Nsets] = {
 	"data",
-	"pythia8230 CfgATLAS",
+	"data,#sqrt{#it{s}} = 5.02 TeV",
 	"pythia8230 SoftQCD",
 	"LHC12f1a_Pythia",
-	"LHC12f1b_Phojet",
-	"LHC12f1a_Pythia_WD",
-	"LHC12f1b_Phojet_WD"
+	"LHC12f1b_Phojet"
 };
 
 int gMarkers[] = {20,24,21,25,23,27,29,30};
@@ -57,7 +52,7 @@ TVector *CentBinBorders;
 int NumCent[2];
 int NPTT;
 int NPTA;
-int iRef=4; // data:
+int iRef=1; // data:
 
 //------------------------------------------------------------------------------------------------
 void LoadData() {
@@ -115,7 +110,7 @@ void DrawPP(int padID, int iPTT, int iPTA) {
 		//==== Upper pad
 		TPad *p = fpad->GetPad(1); //upper pad
 		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
-		hy = hDeltaEtaSig[iRef][pp][0][iPTT][iPTA]->GetMaximum()*1.2;
+		hy = hDeltaEtaSig[iRef][pp][0][iPTT][iPTA]->GetMaximum()*2.0;
 		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
 		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d|#Delta#eta|",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 		hfr->Draw();
