@@ -109,8 +109,8 @@ void Compare(){
 	int ic=0;
 	for(int iptt=3; iptt<NPTT; iptt++){
 		for(int ipta=1;ipta<NPTA;ipta++) {
-			//DrawSignal(ic++,iptt, ipta);
-			DrawIAA(ic++,iptt, ipta);
+			DrawSignal(ic++,iptt, ipta);
+			//DrawIAA(ic++,iptt, ipta);
 	 	}
 	}
 

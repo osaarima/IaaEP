@@ -16,11 +16,12 @@ double highIAA = 2.2;
 TLatex latexRun;
 TString strRun = "pp #sqrt{#it{s}} = 2.76 TeV";
 
-const int Nsets = 5;
+const int Nsets = 6;
 TString infiles[Nsets] = {
 	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF1_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_QF1_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	//"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	//"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -32,6 +33,7 @@ TString sLeg[Nsets] = {
 	"data",
 	"pythia8230 SoftQCD",
 	"pythia8230 SoftQCD, Gluon Filtering",
+	"pythia8230 SoftQCD, Quark Filtering",
 	//"LHC12f1a_Pythia",
 	//"LHC12f1b_Phojet",
 	"pythia8230 SoftQCD, #sqrt{#it{s}} = 5.02 TeV"
@@ -51,7 +53,7 @@ TH1D *hDeltaEtaSig[Nsets][2][kCENT][kMAXD][kMAXD]; // background substracted sig
 TH1D *hIAADeltaEtaSig[Nsets][kCENT][kMAXD][kMAXD]; // background substracted signal IAA
 
 TH1D *hRatiosPP[Nsets];
-TH1D *hRatiosGF;
+TH1D *hRatiosFilter[2]; //GF->0 QF->1
 
 TVector *TriggPtBorders;
 TVector *AssocPtBorders;
@@ -178,8 +180,8 @@ void DrawGF(int padID, int iPTT, int iPTA) {
 
 		leg->AddEntry((TObject*)NULL,hDeltaEtaSig[0][pp][0][iPTT][iPTA]->GetTitle(),"");
 
-		int sIndex[2] = {1,2};
-		for(int i=0;i<2;i++){
+		int sIndex[3] = {1,2,3};
+		for(int i=0;i<3;i++){
 			hDeltaEtaSig[sIndex[i]][pp][0][iPTT][iPTA]->SetMarkerStyle(gMarkers[i]);
 			hDeltaEtaSig[sIndex[i]][pp][0][iPTT][iPTA]->SetMarkerColor(gColors[i]);
 			hDeltaEtaSig[sIndex[i]][pp][0][iPTT][iPTA]->SetLineColor(gColors[i]);
@@ -189,15 +191,18 @@ void DrawGF(int padID, int iPTT, int iPTA) {
 		
 		leg->Draw();
 			// Calculation Various Ratios
-		hRatiosGF = (TH1D*)hDeltaEtaSig[sIndex[1]][pp][0][iPTT][iPTA]->Clone();
-		hRatiosGF->Divide(hDeltaEtaSig[sIndex[0]][pp][0][iPTT][iPTA]);
+		hRatiosFilter[0] = (TH1D*)hDeltaEtaSig[sIndex[1]][pp][0][iPTT][iPTA]->Clone();
+		hRatiosFilter[0]->Divide(hDeltaEtaSig[sIndex[0]][pp][0][iPTT][iPTA]);
+		hRatiosFilter[1] = (TH1D*)hDeltaEtaSig[sIndex[2]][pp][0][iPTT][iPTA]->Clone();
+		hRatiosFilter[1]->Divide(hDeltaEtaSig[sIndex[0]][pp][0][iPTT][iPTA]);
 		//==== Lower pad
 		p = fpad->GetPad(2);
 		p->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();
 		TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, lowIAA, highIAA);
 		hset( *hfr1, "|#Delta#eta|", "Ratio",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
 		hfr1->Draw();
-	
-		hRatiosGF->Draw("p,same");
+		
+		hRatiosFilter[0]->Draw("p,same");
+		hRatiosFilter[1]->Draw("p,same");
 		gPad->GetCanvas()->SaveAs(Form("figs_iaa/DeltaEta_GF_T%02dA%02d.pdf",iPTT,iPTA));
 	}
