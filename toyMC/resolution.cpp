@@ -245,7 +245,7 @@ int main(int argc, char **pargv){
 		//Event generation ----------------------------
 
 		double cent = prng->Uniform(0,50.0);
-		pdf->SetParameter(2,pgr_v[0]->Eval(cent) * 0.9); //v2
+		pdf->SetParameter(2,pgr_v[0]->Eval(cent) * 0.65); //v2
 		pdf->SetParameter(3,pgr_v[1]->Eval(cent)); //v3
 		pdf->SetParameter(4,0.01);//pgr_v[2]->Eval(cent)); //v4
 
@@ -254,7 +254,7 @@ int main(int argc, char **pargv){
 		pdf->SetParameter(7,prng->Uniform(-pi/3.0,pi/3.0)); //EP for v3
 		pdf->SetParameter(8,prng->Uniform(-pi/4.0,pi/4.0)); //EP for v4
 
-		pdf_high->SetParameter(2,high_v[0]->Eval(cent) * 0.9); //v2
+		pdf_high->SetParameter(2,high_v[0]->Eval(cent) * 0.65); //v2
 		pdf_high->SetParameter(3,high_v[2]->Eval(cent)); //v3
 		pdf_high->SetParameter(4,0.01);//pgr_v[2]->Eval(cent)); //v4
 
@@ -275,22 +275,24 @@ int main(int argc, char **pargv){
     std::vector <double> trackphi[D_COUNT];
 		TComplex Qsd[D_COUNT];
 		for(uint s = 0; s < D_COUNT; ++s){
-			uint ntracks = (uint)pgr_nch[s]->Eval(cent) * 0.9;
+			uint ntracks = (uint)pgr_nch[s]->Eval(cent) *0.9;
 
 			TComplex Qa2 = TComplex(0,0);
 			for(uint i = 0; i < ntracks; ++i){
 				double tphi = pdf->GetRandom();
 //				phi = TMath::Floor(8.0*(phi+pi)/(2.0*pi))*(2.0*pi)/8-pi;
         double phi = CheckDetectorPhi(tphi);
+//        double phi = tphi;
         trackphi[s].push_back(phi);
 				Qa2 += TComplex(TMath::Cos(2.0*phi),TMath::Sin(2.0*phi));
 			}
-      double thphi = pdf_high->GetRandom();
-      double hphi = CheckDetectorPhi(thphi);
-      trackphi[s].push_back(hphi);
-			Qa2 += TComplex(TMath::Cos(2.0*hphi),TMath::Sin(2.0*hphi));
+//      double thphi = pdf_high->GetRandom();
+//      double hphi = CheckDetectorPhi(thphi);
+//      trackphi[s].push_back(hphi);
+//			Qa2 += TComplex(TMath::Cos(2.0*hphi),TMath::Sin(2.0*hphi));
 			
-			Qa2 /= (double) (ntracks+1);
+	//		Qa2 /= (double) (ntracks+1);   // for highpt
+			Qa2 /= (double) (ntracks);
 			Qsd[s] = Qa2/TComplex::Abs(Qa2);
 		}
 
