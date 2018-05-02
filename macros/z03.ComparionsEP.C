@@ -16,8 +16,11 @@ double highIAA = 5.2;
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
-const int Nsets = 7;
+const int Nsets = 2;
 TString infiles[Nsets] = {
+	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5317_JCIAA_V0C_E90_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"};
+	/*
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_TPC_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_TPC_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -26,9 +29,13 @@ TString infiles[Nsets] = {
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_V0P_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_V0P_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
+*/
 TFile *fin[Nsets];
 
 TString sLeg[Nsets] = {
+	"lhc10h Inclusive",
+	"lhc10h Out"};
+/*
 	"AMPT String melting",
 	"AMPT TPC In",
 	"AMPT TPC Out",
@@ -37,7 +44,7 @@ TString sLeg[Nsets] = {
 	"AMPT V0P In",
 	"AMPT V0P Out"
 };
-
+*/
 int gMarkers[] = {20,24,21,25,23,27,29,30};
 int gColors[]={kBlack, kRed, kBlue, kDeepSea, kPink, kGray, kRed, kBlack};
 
@@ -84,9 +91,11 @@ void LoadData() {
 		for(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp  //(*fCentralityBinBorders)[i+1]
 			for(int ic=0; ic<NumCent[idtyp]; ic++){
 				for(int iptt=0; iptt<NPTT; iptt++){
-					for(int ipta=0;ipta<NPTA;ipta++) {
+					for(int ipta=1;ipta<NPTA;ipta++) {
 						hDeltaEtaSig[i][idtyp][ic][iptt][ipta] = (TH1D *)fin[i]->Get(Form("hDeltaEtaSig%02dC%02dT%02dA%02d",idtyp,ic,iptt,ipta));
 						if(idtyp==AA) hIAADeltaEtaSig[i][ic][iptt][ipta] = (TH1D *)fin[i]->Get(Form("hIAADeltaEtaSigC%02dT%02dA%02d",ic,iptt,ipta));
+						printf("Set%d C%d T%d A %d\n",i, ic, iptt, ipta);
+						hDeltaEtaSig[i][idtyp][ic][iptt][ipta]->Print();
 					} // ipta
 				} // iptt 
 			} // ic
@@ -94,6 +103,7 @@ void LoadData() {
 	} // iset
 	// Calculation Various Ratios
 	// 1. Out/In ratio for each data setfor(int i=0;i<Nsets;i++){
+	cout <<"Calculating ratios...."<<endl;
 	for(int ic=0; ic<NumCent[AA]; ic++){
 		for(int iptt=0; iptt<NPTT; iptt++){
 			for(int ipta=0;ipta<NPTA;ipta++) {
