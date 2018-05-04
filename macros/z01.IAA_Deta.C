@@ -133,33 +133,23 @@ void run2Data(){
 
 void runAMPT(){
 
-	const int NAA = 7;
+	const int NAA = 3;
 	TString fileAA[NAA] = {
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-964_20180407-1152-AMPT_LHC13f3c.root", // Inclusive
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-947_20180402-2120-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-948_20180402-2121-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-948_20180402-2121-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-949_20180402-2122-AMPT_LHC13f3c.root",
-		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-949_20180402-2122-AMPT_LHC13f3c.root"
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-990_20180427-1443-AMPT_LHC13f3c.root",  // Inclusive
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-991_20180427-1443-AMPT_LHC13f3c.root", // Inclusive
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_PbPb_MC-992_20180427-1443-AMPT_LHC13f3c.root"
 	};
 	TString dirAA[NAA] = {
 		"JCIAA_EPInclusive",
-		"JCIAA_TPC_E00",
-		"JCIAA_TPC_E90",
-		"JCIAA_V0A_E00",
-		"JCIAA_V0A_E90",
-		"JCIAA_V0P_E00",
-		"JCIAA_V0P_E90",
+		"JCIAA_V0C_E00",
+		"JCIAA_V0C_E90"
+
 	};
 	TString commentAA[NAA] = {
 		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c",
-		"AMPT_LHC13f3c",
-		"AMPT_LHC13f3c",
-		"AMPT_LHC13f3c",
-		"AMPT_LHC13f3c",
 		"AMPT_LHC13f3c"
+
 	};
 
 	const int NPP = 2;
@@ -169,8 +159,10 @@ void runAMPT(){
 	};
 
 	TString filePP[NPP] = {
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-515_20180427-1107-LHC17l3b_cent_woSDD.root", // 5TeV pp
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-516_20180427-1107-LHC17l3b_cent_woSDD.root" // 5TeV pp
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-512_20180427-1104-LHC12f1a_Pythia_2760GeV.root", // kineOnly
+		"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp_MC-521_20180503-1035-LHC12f1a_Pythia_2760GeV.root" // 2.76 ALICE pythia
+		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-515_20180427-1107-LHC17l3b_cent_woSDD.root", // 5TeV pp
+		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-516_20180427-1107-LHC17l3b_cent_woSDD.root" // 5TeV pp
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-CfgATLAS.root"
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-configSoftQCD.root"
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF1-configSoftQCD.root" // Gluon Filter
@@ -178,12 +170,14 @@ void runAMPT(){
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_QF1-configSoftQCD.root" // Quark Filter
 	};
 	TString commentPP[NPP] = {
+		"LHC12f1a_Pythia_2760GeV_KineOnly",
+		"LHC12f1a_Pythia_2760GeV_Reco"
 		//"pythia8230_pp2.76TeV_GF1_SoftQCD"
 		//"pythia8230_pp2.76TeV_QF1_SoftQCD"
 		//"pythia8230_pp5.02TeV_GF0_SoftQCD"
 		//"LHC11a_p4_AOD113_noSDD"
-		"LHC17p_pass1_CENT_woSDD_KineOnly",
-		"LHC17p_pass1_CENT_woSDD_Reco"
+		//"LHC17p_pass1_CENT_woSDD_KineOnly",
+		//"LHC17p_pass1_CENT_woSDD_Reco"
 		//"LHC12f1a_Pythia_2760GeV",
 		//"LHC12f1b_Phojet_2760GeV"
 	};
@@ -193,7 +187,7 @@ void runAMPT(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<1;iA++) { // NAA
+	for(int iA=0;iA<NAA;iA++) { // NAA
 		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){

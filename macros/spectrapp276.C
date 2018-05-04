@@ -1,11 +1,11 @@
 #include "include/Filipad.h"
 
-double lowx=-1.;
-double highx=20.;
-double ly = 1e-8;
-double hy = 2.2e5;
-double lowRAA = 0.0;
-double highRAA = 1.3;
+double lowx=-0.1;
+double highx=100.;
+double ly = 1e-9;
+double hy = 2.2e3;
+double lowRAA = -0.2;
+double highRAA = 5;
 
 TLatex latexRun;
 TString strRunPP = "pp #sqrt{#it{s}} = 2.76 TeV";
@@ -27,24 +27,27 @@ TGraphAsymmErrors	*gr_alice_pp_2760GeV;
 
 
 
-const int NPP = 2;
+const int NPP = 3;
 TH1D *hChargedPtPPOnly[NPP];
 TH1D *hChargedPtPPOnly_Ratio[NPP];
 
 TFile *fPP[NPP];
-int iRef = 0;
+int iRef = 1;
 TString filePP[NPP] = {
 	"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root",
-	"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1709_20180405-0222-2760GeV_LHC11a_p4_AOD113_withSDD.root" // 2.76TeV pp
+	"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-512_20180427-1104-LHC12f1a_Pythia_2760GeV.root", // 2.76TeV pp
+	"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp_MC-521_20180503-1035-LHC12f1a_Pythia_2760GeV.root"
 };
 
 TString dirPP[NPP] = {
   "JCIAA_GlobalSDD_H0_T0",
-  "JCIAA_GlobalSDD_H0_T0"
+  "JCIAA_KineOnly",
+  "JCIAA_Reco"
 };
 TString commentPP[NPP] = {
 	"LHC11a_p4_AOD113_noSDD",
-	"LHC11a_p4_AOD113_withSDD"
+	"LHC12f1a_Pythia_2760GeV_KineOnly",
+	"LHC12f1a_Pythia_2760GeV_Reco"
 };
 
 
@@ -92,21 +95,22 @@ void DrawPPOnly() {
 	TPad *p = fpad->GetPad(1); //upper pad
 	p->SetTickx(); p->SetLogx(1); p->SetLogy(1); p->cd();
 	hy = hChargedPtPPOnly[iRef]->GetMaximum()*1.2;
-	TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, 1e-7, 3e3); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
+	TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
 	hset( *hfr, "p_{T} [GeV/c]", "1/N_{eve}1/(2#pip_{T})dN/dp_{T}[(GeV/c)^{-2}]",1.1,1.2, 0.06,0.06, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 	//hset( *hfr, "p_{T} [GeV/c]", "Ed^{3}#sigma/dp^{3} [mb GeV^{-2}c^{3}]",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);
 	//Ed^{3}#sigma/dp^{3} [mb GeV^{-2}c^{3}] ??
 	hfr->Draw();
 	//Legend definition
-	TLegend *leg = new TLegend(0.45,0.4,0.85,0.78,"","brNDC");
+	TLegend *leg = new TLegend(0.45,0.6,0.8,0.85,"","brNDC");
 	leg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;
 
 	for(int i=0;i<NPP;i++) {
 		hChargedPtPPOnly[i]->SetMarkerStyle(gMarkers[i]);
+		hChargedPtPPOnly[i]->SetMarkerColor(gColors[i]);
 		hChargedPtPPOnly[i]->Draw("p,same");
 		leg->AddEntry(hChargedPtPPOnly[i],commentPP[i],"pl");
 		hChargedPtPPOnly_Ratio[i] = (TH1D*)hChargedPtPPOnly[i]->Clone();
-		hChargedPtPPOnly_Ratio[i]->Divide(hChargedPtpp_ALICEpub);
+		hChargedPtPPOnly_Ratio[i]->Divide(hChargedPtPPOnly[iRef]);
 	}
 	hChargedPtpp_ALICEpub->SetMarkerStyle(30);
 	hChargedPtpp_ALICEpub->Draw("p,same");
@@ -122,7 +126,7 @@ void DrawPPOnly() {
 	//==== Lower pad
 	p = fpad->GetPad(2);
 	p->SetTickx(); p->SetGridy(1); p->SetLogx(1), p->SetLogy(0); p->cd();
-	TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, 0.0, 5);
+	TH2F *hfr1 = new TH2F("hfr1"," ", 100, lowx, highx, 10, lowRAA, highRAA);
 	hset( *hfr1, "p_{T} [GeV/c]", "Ratio",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);
 	hfr1->Draw();
 	for(int i=0;i<NPP;i++) {
