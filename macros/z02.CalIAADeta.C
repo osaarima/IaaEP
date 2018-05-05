@@ -53,10 +53,12 @@ TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
 void run2() {
 
-	const int Nsets = 23;
+	const int Nsets = 25;
 	TString infiles[Nsets] = {
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root", // new data w.o correct filter bit
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0C_E00_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_V0C_E90_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",

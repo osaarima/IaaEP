@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"Lo",
+				"LoadALICEPub"
+			],
+			[
+				"infi",
+				"infileALICE"
+			],
+			[
+				"i",
+				"i"
+			],
+			[
 				"leg",
 				"legotrain_JCIaa"
 			],
@@ -107,16 +119,19 @@
 			"file": "z01.IAA_Deta.C",
 			"settings":
 			{
-				"buffer_size": 37269,
+				"buffer_size": 37865,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
+			"contents": "\n#include \"include/Filipad.h\"\n\nTH1D *Flip(TH1D* hin, int idtyp);\nTGraphErrors* get_ratio( TGraphErrors * l, TGraphErrors *r );\ndouble FitGeneralizedGaus(double *x, double *par);\ndouble FitGeneralizedGausPlusBG(double *x, double *par);\ndouble FitKaplan(double *x, double *par);\nTH1D* SubtractBg(TH1D *h, double bg, double ebg);\nvoid DrawAfterFlip(int iPTT, int iPTA);\nvoid DrawBeforeFlip(int iPTT, int iPTA);\nvoid DrawSignal(int iPTT, int iPTA);\nvoid DoAnalysis(TString inFile=\"sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",  TString oname=\"\");\nvoid run2();\n\nconst int kMAXD       = 20; //maximal number of pT trigger bins\nconst int kCENT       = 10; //maximal number of pT trigger bins\nconst int kZvtx       = 15; //maximal number of pT trigger bins\nenum dataType { AA, pp };\nint NC;\n\nTH1D *hTriggPtBin[2][kCENT][kMAXD]; \nTH1D *hAssocPtBin[2][kCENT][kMAXD][kMAXD]; \n\nTH1D *hIAAEta[kCENT][kMAXD][kMAXD]; // in eta,phi \n\nTFile *fin;\n\n// with $\\Delta\\phi$ < 0.2 ??? check\nTH1D *hDeltaEta[2][kCENT][kMAXD][kMAXD]; // summed DeltaEta AA-0 pp-1\nTH1D *hDeltaEtaFlip[2][kCENT][kMAXD][kMAXD]; // Flip Deta around 0 to positive side\nTH1D *hDeltaEtaSig[2][kCENT][kMAXD][kMAXD]; // background substracted signal based on fit\n// IAA before substraction and after\nTH1D *hIAADeltaEta[kCENT][kMAXD][kMAXD];\nTH1D *hIAADeltaEtaFlip[kCENT][kMAXD][kMAXD];\nTH1D *hIAADeltaEtaSig[kCENT][kMAXD][kMAXD]; // background substracted signal IAA\n\n// Fits only after Fip at this moment\nTF1 *fKaplan[2][kCENT][kMAXD][kMAXD]; // \nTF1 *fGG[2][kCENT][kMAXD][kMAXD]; //\n\nBool_t saveRoot = kTRUE;\ndouble lowx=-0.8;\ndouble highx=0.8;\ndouble ly = -0.1;\ndouble hy = 0.4;\ndouble lowIAA = 0.;\ndouble highIAA = 2.;\n\nTLatex latexRun;\nTString strRun = \"Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV\";\n\n\nvoid run2() {\n\n\tconst int Nsets = 11;\n\tTString infiles[Nsets] = {\n\t\t\"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_LHC10h_AOD86_MgFpMgFm_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_AMPT_LHC13f3c_JCIAA_TPC_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_AMPT_LHC13f3c_JCIAA_TPC_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_AMPT_LHC13f3c_JCIAA_V0A_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_AMPT_LHC13f3c_JCIAA_V0A_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_AMPT_LHC13f3c_JCIAA_V0P_E00_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\n\t\t\"sysErrors/_AMPT_LHC13f3c_JCIAA_V0P_E90_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root\"\n\t};\n\n\tTObjArray *outString[Nsets];\n\tTString outrootname[Nsets];\n\tfor(int i=0;i<Nsets;i++) { \n\t\toutString[i] = infiles[i].Tokenize(\"/\");\n\t\tTString sDir = ((TObjString *)outString[i]->At(0))->GetString();\n\t\tTString sName = ((TObjString *)outString[i]->At(1))->GetString();\n\t\toutrootname[i] = Form(\"%s/Signal%s\",sDir.Data(),sName.Data());\n\t\t//cout << outrootname[i] << endl;\n\t}\n\tfor(int i=0;i<2;i++) { \n\t\tDoAnalysis(infiles[i],outrootname[i]);\n\t}\n//\tDoAnalysis (\"sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",\"sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root\");\n}\n\n\nvoid DoAnalysis(TString inFile=\"sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root\",  TString oname=\"\"){\n\tcout <<\"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\"<<endl;\n\tcout <<\"PbPb : \"<< inFile << endl;\n\tcout <<\"Discription :\"<< oname << endl;\n\n\tfin = TFile::Open(inFile);\n\n\tTVector *TriggPtBorders;\n\tTVector *AssocPtBorders;\n\tTVector *CentBinBorders;\n\n\tTriggPtBorders             = (TVector*) fin->Get(\"TriggPtBorders\");\n\tAssocPtBorders             = (TVector*) fin->Get(\"AssocPtBorders\");\n\tCentBinBorders             = (TVector*) fin->Get(\"CentBinBorders\");\n\n\tint NumCent[2]    = { CentBinBorders->GetNoElements()-1, 1}; \n\tint NumPtt     = TriggPtBorders->GetNoElements()-1;\n\tint NumPta     = AssocPtBorders->GetNoElements()-1;\n\tcout <<\"PbPb\"<<endl;\n\tcout <<\"bins:  c=\"<<  NumCent[AA] <<\" ptt=\"<< NumPtt <<\" pta=\"<< NumPta  << endl; \n\tcout <<\"+++++++++++++++++++++++++++++++++++++++++++++++\"<<endl;\n\n\tNC = NumCent[AA];\n\tint NPTT = NumPtt;\n\tint NPTA = NumPta;\n\tdouble MeanPta[NC][NPTT][NPTA];\n\n\n\t//------------ R e a d    D a t a ------------    \n\tcout <<\"Reading data....\"<<endl;\n\tfor(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp  //(*fCentralityBinBorders)[i+1]\n\t\tfor(int ic=0; ic<NumCent[idtyp]; ic++){\n\t\t\tfor(int iptt=0; iptt<NPTT; iptt++){\n\t\t\t\tfor(int ipta=0;ipta<NPTA;ipta++) {\n\t\t\t\t\thDeltaEta[idtyp][ic][iptt][ipta] = (TH1D *)fin->Get(Form(\"hDeltaEtaType%02dC%02dT%02dA%02d\",idtyp,ic,iptt,ipta));\n\t\t\t\t\t//hDeltaEta[idtyp][ic][iptt][ipta]->Print();\n\t\t\t\t\thDeltaEta[idtyp][ic][iptt][ipta]->SetXTitle(\"#Delta#eta\");\n\t\t\t\t\thDeltaEta[idtyp][ic][iptt][ipta]->GetXaxis()->CenterTitle(kTRUE);\n\t\t\t\t\thDeltaEta[idtyp][ic][iptt][ipta]->GetXaxis()->SetTitleOffset(2);\n\t\t\t\t\thDeltaEta[idtyp][ic][iptt][ipta]->SetYTitle(\"1/N_{trigg} dN/d#Delta#eta\"); // done in z01\n\t\t\t\t\thDeltaEtaFlip[idtyp][ic][iptt][ipta] = Flip((TH1D*) hDeltaEta[idtyp][ic][iptt][ipta], idtyp);\n\t\t\t\t} // ipta\n\t\t\t} // iptt \n\t\t} // ic\n\t} // pp or AA\n\n\t// Need to substract background from Generalized Gaussians..\n\t// Fit functions\n\tdouble fitRange = -1;\n\tdouble MaxEta = 0.8;\n\tfor(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp  //(*fCentralityBinBorders)[i+1]\n\t\tfor(int ic=0; ic<NumCent[idtyp]; ic++){\n\t\t\tfor(int iptt=0; iptt<NPTT; iptt++){\n\t\t\t\tfor(int ipta=0;ipta<NPTA;ipta++) {\n\t\t\t\t\t// Kaplan\n\t\t\t\t\tdouble maxRange = (fitRange > 0) ? fitRange : 2*MaxEta;\n\t\t\t\t\tTString fitname = Form(\"Kaplan%02d%02d%02d%02d\", idtyp, ic, iptt, ipta);\n\t\t\t\t\tfKaplan[idtyp][ic][iptt][ipta] = new TF1(fitname, FitKaplan, 0, maxRange,4); \n\t\t\t\t\t// GG\n\t\t\t\t\tfitname = Form(\"GG%02d%02d%02d%02d\", idtyp, ic, iptt, ipta);\n\t\t\t\t\tfGG[idtyp][ic][iptt][ipta]     = new TF1(fitname, FitGeneralizedGausPlusBG, -1.6, 1.6, 4); // 4 Parameters\n\n\t\t\t\t\t//estimate fit parametes\n\t\t\t\t\tTH1D *hFlipDeta = (TH1D*) hDeltaEtaFlip[idtyp][ic][iptt][ipta];\n\t\t\t\t\tdouble bg       = hFlipDeta->Integral(hFlipDeta->FindBin(0.4), hFlipDeta->GetNbinsX())/(hFlipDeta->GetNbinsX()-hFlipDeta->FindBin(0.4));\n\t\t\t\t\tdouble peakAmpl = hFlipDeta->GetBinContent(hFlipDeta->FindBin(0))-bg;\n\t\t\t\t\tfKaplan[idtyp][ic][iptt][ipta]->SetParameters(bg, peakAmpl, 20.0, 1.0);\n\t\t\t\t\t//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(0,bg/10.,bg*4.);\n\t\t\t\t\t//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(1,2e-3,100);\n\t\t\t\t\t//fKaplan[idtyp][ic][iptt][ipta]->SetParLimits(3,2e-3,10);\n\t\t\t\t\tTString opt = \"QRN\";\n\t\t\t\t\thFlipDeta->Fit((TF1*) fKaplan[idtyp][ic][iptt][ipta],opt);\n\t\t\t\t\tbg         = fKaplan[idtyp][ic][iptt][ipta]->GetParameter(0);\n\t\t\t\t\tdouble ebg = fKaplan[idtyp][ic][iptt][ipta]->GetParError(0);\n          \t\t\thDeltaEtaSig[idtyp][ic][iptt][ipta] = SubtractBg(hFlipDeta,bg,ebg); //subtract bg\n\t\t\t\t} // ipta\n\t\t\t} // iptt \n\t\t} // ic\n\t} // pp or AA\n\n\tcout <<\"Calculationg IAA...\"<<endl;\n\n\tfor(int ic=0; ic<NumCent[AA]; ic++){\n\t\tfor(int iptt=0; iptt<NPTT; iptt++){\n\t\t\tfor(int ipta=0;ipta<NPTA;ipta++) {\n\t\t\t\thIAADeltaEta[ic][iptt][ipta] = (TH1D*)hDeltaEta[AA][ic][iptt][ipta]->Clone();\n\t\t\t\thIAADeltaEta[ic][iptt][ipta]->Divide(hDeltaEta[pp][0][iptt][ipta]);\n\n\t\t\t\thIAADeltaEtaFlip[ic][iptt][ipta] = (TH1D*)hDeltaEtaFlip[AA][ic][iptt][ipta]->Clone();\n\t\t\t\thIAADeltaEtaFlip[ic][iptt][ipta]->Divide(hDeltaEtaFlip[pp][0][iptt][ipta]);\n\n\t\t\t\thIAADeltaEtaSig[ic][iptt][ipta]= (TH1D*)hDeltaEtaSig[AA][ic][iptt][ipta]->Clone();\n\t\t\t\thIAADeltaEtaSig[ic][iptt][ipta]->Divide(hDeltaEtaSig[pp][0][iptt][ipta]);\n\n\t\t\t} // iptt \n\t\t} // ic\n\t}\n\n\n\tint iPTT=3;\n\tint iPTA=4;\n\n\t//DrawBeforeFlip(iPTT, iPTA);\n\tDrawAfterFlip(iPTT, iPTA);\n\t//DrawSignal(iPTT, iPTA);\n\n\tif(saveRoot) {\n\t\tcout <<\"Writing the results into a file...\"<< endl;\n\t\tTFile *fout = new TFile(Form(\"%s\",oname.Data()),\"recreate\");\n\t\tfout->cd();\n\t\t// Deltaeta\n\t\tfor(int idtyp=0; idtyp<2; idtyp++){ // 0 = AA, 1 = pp\n\t\t\tfor(int ic=0; ic<NumCent[idtyp]; ic++){\n\t\t\t\tfor(int iptt=0; iptt<NPTT; iptt++){\n\t\t\t\t\tfor(int ipta=0;ipta<NPTA;ipta++) {\n\t\t\t\t\t\thDeltaEtaSig[idtyp][ic][iptt][ipta]->Write(Form(\"hDeltaEtaSig%02dC%02dT%02dA%02d\",idtyp,ic,iptt,ipta));\n\t\t\t\t\t\tif(idtyp==AA) hIAADeltaEtaSig[ic][iptt][ipta]->Write(Form(\"hIAADeltaEtaSigC%02dT%02dA%02d\",ic,iptt,ipta));\n\t\t\t\t\t} // pta\n\t\t\t\t} // ptt \n\t\t\t} // cent\n\t\t} // type \n\t\tfout->cd();\n\t\tCentBinBorders->Write(\"CentBinBorders\");\n\t\tTriggPtBorders->Write(\"TriggPtBorders\");\n\t\tAssocPtBorders->Write(\"AssocPtBorders\");\n\t\tfout->Close();\n\t}\n\n}\n\n//------------------------------------------------------------------------------------------------\n//------------------------------------------------------------------------------------------------\nvoid DrawSignal(int iPTT, int iPTA) {\n\tlowx = -0.01;\n\tfor(int ic=0;ic<NC;ic++) {\n\t\tFilipad *fpad = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NC);\n\t\tfpad->Draw();\n\t\t//==== Upper pad\n\t\tTPad *p = fpad->GetPad(1); //upper pad\n\t\tp->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();\n\t\thy = hDeltaEtaSig[AA][ic][iPTT][iPTA]->GetMaximum()*1.2;\n\t\tTH2F *hfr = new TH2F(\"hfr\",\" \", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y\n\t\thset( *hfr, \"|#Delta#eta|\", \"1/N_{trigg} dN/d#Delta#eta\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis\n\t\thfr->Draw();\n\t\t//Legend definition\n\t\tTLegend *leg = new TLegend(0.45,0.6,0.85,0.82,\"\",\"brNDC\");\n\t\tleg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;\n\n\t\tlatexRun.DrawLatexNDC( 0.47, 0.85 ,strRun);\n\n\t\thDeltaEtaSig[AA][ic][iPTT][iPTA]->SetMarkerStyle(20);\n\t\thDeltaEtaSig[AA][ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\thDeltaEtaSig[pp][0][iPTT][iPTA]->SetMarkerStyle(24);\n\t\thDeltaEtaSig[pp][0][iPTT][iPTA]->Draw(\"p,same\");\n\n\n\t\tleg->AddEntry(hDeltaEtaSig[AA][ic][iPTT][iPTA],hDeltaEtaSig[AA][ic][iPTT][iPTA]->GetTitle(),\"p\");\n\t\tleg->AddEntry(hDeltaEtaSig[pp][0][iPTT][iPTA],hDeltaEtaSig[pp][0][iPTT][iPTA]->GetTitle(),\"p\");\n\t\t\n\t\tleg->Draw();\n\n\t\t//==== Lower pad\n\t\tp = fpad->GetPad(2);\n\t\tp->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();\n\t\tTH2F *hfr1 = new TH2F(\"hfr1\",\" \", 100, lowx, highx, 10, lowIAA, highIAA);\n\t\thset( *hfr1, \"|#Delta#eta|\", \"AA/pp\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);\n\t\thfr1->Draw();\n\t\thIAADeltaEtaSig[ic][iPTT][iPTA]->SetMarkerStyle(21);\n\t\thIAADeltaEtaSig[ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\t//gPad->GetCanvas()->SaveAs(Form(\"figs_svn/FigA4_v%d_modelcomparisonBest.eps\",i+2));\n\t}\n}\n\n//------------------------------------------------------------------------------------------------\nvoid DrawAfterFlip(int iPTT, int iPTA) {\n\tlowx = -0.01;\n\tfor(int ic=0;ic<NC;ic++) {\n\t\tFilipad *fpad = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NC);\n\t\tfpad->Draw();\n\t\t//==== Upper pad\n\t\tTPad *p = fpad->GetPad(1); //upper pad\n\t\tp->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();\n\t\thy = hDeltaEtaFlip[AA][ic][iPTT][iPTA]->GetMaximum()*1.2;\n\t\tTH2F *hfr = new TH2F(\"hfr\",\" \", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y\n\t\thset( *hfr, \"|#Delta#eta|\", \"1/N_{trigg} dN/d#Delta#eta\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis\n\t\thfr->Draw();\n\t\t//Legend definition\n\t\tTLegend *leg = new TLegend(0.45,0.6,0.85,0.82,\"\",\"brNDC\");\n\t\tleg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;\n\n\t\tlatexRun.DrawLatexNDC( 0.47, 0.85 ,strRun);\n\n\t\thDeltaEtaFlip[AA][ic][iPTT][iPTA]->SetMarkerStyle(20);\n\t\thDeltaEtaFlip[AA][ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\thDeltaEtaFlip[pp][0][iPTT][iPTA]->SetMarkerStyle(24);\n\t\thDeltaEtaFlip[pp][0][iPTT][iPTA]->Draw(\"p,same\");\n\t\tfKaplan[AA][ic][iPTT][iPTA]->Draw(\"same\");\n\t\tfKaplan[pp][0][iPTT][iPTA]->SetLineColor(kBlue);\n\t\tfKaplan[pp][0][iPTT][iPTA]->Draw(\"same\");\n\n\t\tleg->AddEntry(hDeltaEtaFlip[AA][ic][iPTT][iPTA],hDeltaEtaFlip[AA][ic][iPTT][iPTA]->GetTitle(),\"p\");\n\t\tleg->AddEntry(hDeltaEtaFlip[pp][0][iPTT][iPTA],hDeltaEtaFlip[pp][0][iPTT][iPTA]->GetTitle(),\"p\");\n\t\t\n\t\tleg->Draw();\n\n\t\t//==== Lower pad\n\t\tp = fpad->GetPad(2);\n\t\tp->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();\n\t\tTH2F *hfr1 = new TH2F(\"hfr1\",\" \", 100, lowx, highx, 10, lowIAA, highIAA);\n\t\thset( *hfr1, \"|#Delta#eta|\", \"AA/pp\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);\n\t\thfr1->Draw();\n\t\thIAADeltaEtaFlip[ic][iPTT][iPTA]->SetMarkerStyle(21);\n\t\thIAADeltaEtaFlip[ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\t//gPad->GetCanvas()->SaveAs(Form(\"figs_svn/FigA4_v%d_modelcomparisonBest.eps\",i+2));\n\t}\n}\n\n//------------------------------------------------------------------------------------------------\nvoid DrawBeforeFlip(int iPTT, int iPTA) {\n\tfor(int ic=0;ic<NC;ic++) {\n\t\tFilipad *fpad = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NC);\n\t\tfpad->Draw();\n\t\t//==== Upper pad\n\t\tTPad *p = fpad->GetPad(1); //upper pad\n\t\tp->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();\n\t\thy = hDeltaEta[AA][ic][iPTT][iPTA]->GetMaximum()*1.2;\n\t\tTH2F *hfr = new TH2F(\"hfr\",\" \", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y\n\t\thset( *hfr, \"#Delta#eta\", \"1/N_{trigg} dN/d#Delta#eta\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis\n\t\thfr->Draw();\n\t\t//Legend definition\n\t\tTLegend *leg = new TLegend(0.45,0.6,0.85,0.82,\"\",\"brNDC\");\n\t\tleg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;\n\n\t\tlatexRun.DrawLatexNDC( 0.47, 0.85 ,strRun);\n\t\thDeltaEta[AA][ic][iPTT][iPTA]->SetMarkerStyle(20);\n\t\thDeltaEta[AA][ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\thDeltaEta[pp][0][iPTT][iPTA]->SetMarkerStyle(24);\n\t\thDeltaEta[pp][0][iPTT][iPTA]->Draw(\"p,same\");\n\t\thDeltaEtaFlip[AA][ic][iPTT][iPTA]->SetMarkerStyle(25);\n\t\thDeltaEtaFlip[AA][ic][iPTT][iPTA]->Draw(\"p,same\");\n\n\t\tleg->AddEntry(hDeltaEta[AA][ic][iPTT][iPTA],hDeltaEta[AA][ic][iPTT][iPTA]->GetTitle(),\"p\");\n\t\tleg->AddEntry(hDeltaEta[pp][0][iPTT][iPTA],hDeltaEta[pp][0][iPTT][iPTA]->GetTitle(),\"p\");\n\t\t\n\t\tleg->Draw();\n\n\t\t//==== Lower pad\n\t\tp = fpad->GetPad(2);\n\t\tp->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();\n\t\tTH2F *hfr1 = new TH2F(\"hfr1\",\" \", 100, lowx, highx, 10, lowIAA, highIAA);\n\t\thset( *hfr1, \"#Delta#eta\", \"AA/pp\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);\n\t\thfr1->Draw();\n\t\thIAADeltaEta[ic][iPTT][iPTA]->SetMarkerStyle(20);\n\t\thIAADeltaEta[ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\thIAADeltaEtaFlip[ic][iPTT][iPTA]->SetMarkerStyle(24);\n\t\thIAADeltaEtaFlip[ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\t//gPad->GetCanvas()->SaveAs(Form(\"figs_svn/FigA4_v%d_modelcomparisonBest.eps\",i+2));\n\t}\n}\n\n//------------------------------------------------------------------------------------------------\nTH1D *Flip(TH1D* hin, int idtyp){\n\tint nb  = hin->GetNbinsX();\n\tdouble scale = 2.0; // MUST Have dN/deta -> dN/d|eta|\n\tdouble max = hin->GetBinLowEdge(nb+1);\n\tTString hname = hin->GetName();\n\tTString newName = Form(\"%s_flip%d\",hname.Data(),idtyp);\n\n\tTH1D *hFlip = new TH1D(newName.Data(), newName.Data(), (int) nb/2., 0, max);\n\thFlip->SetTitle(hin->GetTitle());\n\tint zero = hin->FindBin(0.00001);\n\tfor(int ib=zero; ib<=nb; ib++){\n\t\tdouble valPos = hin->GetBinContent(ib);\n\t\tdouble errPos = hin->GetBinError(ib);\n\t\tdouble valNeg = hin->GetBinContent(nb - ib+1);\n\t\tdouble errNeg = hin->GetBinError(nb - ib+1);\n\n\t\thFlip->SetBinContent(ib-zero+1, (valPos+valNeg)/scale);\n\t\thFlip->SetBinError(ib-zero+1, sqrt( errPos*errPos + errNeg * errNeg )/scale);\n\t}\n\n\treturn hFlip;\n}\n\n//------------------------------------------------------------------------------------------------\ndouble FitGeneralizedGaus(double *x, double *par) {\n\treturn par[2]*par[0]/(2*par[1]*TMath::Gamma(1/par[0]))*TMath::Exp(-TMath::Power(TMath::Abs(x[0])/par[1], par[0]));\n}\n\n//------------------------------------------------------------------------------------------------\ndouble FitGeneralizedGausPlusBG(double *x, double *par) {\n\treturn FitGeneralizedGaus(x, par) + par[3];\n}\n\n//------------------------------------------------------------------------------------------------\ndouble FitKaplan(double *x, double *par){  //Fit Deta near with const + Kaplan\n\tdouble deta = x[0];\n\tdouble bg   = par[0];\n\tdouble ampl = par[1];\n\tdouble k    = par[2];\n\tdouble n    = par[3];\n\n\treturn bg + ampl*pow( 1 + k*deta*deta,-n);\n}\n\n\n//------------------------------------------------------------------------------------------------\nTH1D* SubtractBg(TH1D *h, double bg, double ebg){\n\tint nb =h->GetNbinsX();\n\tTString hname = h->GetName();\n\n\tTH1D *hsig  = (TH1D*) h->Clone(Form(\"%s_sig\",hname.Data()));\n\thsig->Reset();\n\n\tfor(int ib=1; ib<=nb; ib++){\n\t\tdouble val = h->GetBinContent(ib);\n\t\tdouble err = h->GetBinError(ib);\n\t\thsig->SetBinContent(ib,val-bg);\n\t\thsig->SetBinError(ib,sqrt(err*err +  ebg * ebg));\n\t}\n\n\treturn hsig;\n}",
 			"file": "z02.CalIAADeta.C",
+			"file_size": 17222,
+			"file_write_time": 131687808581871215,
 			"settings":
 			{
-				"buffer_size": 16926,
+				"buffer_size": 17216,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -125,7 +140,43 @@
 			"file": "z03.ComparionsDeta.C",
 			"settings":
 			{
-				"buffer_size": 8956,
+				"buffer_size": 11316,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "z03.ComparionsEP.C",
+			"settings":
+			{
+				"buffer_size": 8904,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "z05.Comparisons_PbPb.C",
+			"settings":
+			{
+				"buffer_size": 8312,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "z04.Comparisons_pp.C",
+			"settings":
+			{
+				"buffer_size": 5742,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "raa.C",
+			"settings":
+			{
+				"buffer_size": 6749,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -179,6 +230,7 @@
 	},
 	"file_history":
 	[
+		"/Users/djkim/GitHub/IaaEP/macros/z02.CalIAADeta.C",
 		"/Users/djkim/cernbox_mjj/Macros/Compare_RawPtPair_Cent.C",
 		"/Users/djkim/cernbox/iaa/1006.PbPbIaa/ptdist2D_zMix.C",
 		"/Users/djkim/Dropbox/jfluc/common/single_vn/vn_mult.C",
@@ -304,6 +356,11 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"hChargedPtpp",
+			"CentBinBorders",
+			"hIAADeltaEtaSig",
+			"hRatio_IAA",
+			"CfgATLAS",
 			"Reading",
 			"reading",
 			"zVertBins",
@@ -379,6 +436,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"SoftQCD",
+			"configSoftQCD",
 			"void DrawSignal(int iPTT, int iPTA) {\n\tlowx = -0.01;\n\tfor(int ic=0;ic<NC;ic++) {\n\t\tFilipad *fpad = new Filipad(ic+1, 1.1, 0.5, 100, 100, 0.7,NC);\n\t\tfpad->Draw();\n\t\t//==== Upper pad\n\t\tTPad *p = fpad->GetPad(1); //upper pad\n\t\tp->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();\n\t\tTH2F *hfr = new TH2F(\"hfr\",\" \", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y\n\t\thset( *hfr, \"#Delta#eta\", \"1/N_{trigg} dN/d#Delta#eta\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis\n\t\thfr->Draw();\n\t\t//Legend definition\n\t\tTLegend *leg = new TLegend(0.25,0.50,0.85,0.82,\"\",\"brNDC\");\n\t\tleg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;\n\n\t\tlatexRun.DrawLatexNDC( 0.47, 0.09 ,strRun);\n\n\t\thDeltaEtaFlip[AA][ic][iPTT][iPTA]->SetMarkerStyle(21);\n\t\thDeltaEtaFlip[AA][ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\thDeltaEtaFlip[pp][0][iPTT][iPTA]->SetMarkerStyle(25);\n\t\thDeltaEtaFlip[pp][0][iPTT][iPTA]->Draw(\"p,same\");\n\t\tfKaplan[AA][ic][iPTT][iPTA]->Draw(\"same\");\n\t\tfKaplan[pp][0][iPTT][iPTA]->Draw(\"same\");\n\n\t\tleg->AddEntry(hDeltaEtaFlip[AA][ic][iPTT][iPTA],hDeltaEtaFlip[AA][ic][iPTT][iPTA]->GetTitle(),\"p\");\n\t\tleg->AddEntry(hDeltaEtaFlip[pp][0][iPTT][iPTA],hDeltaEtaFlip[pp][0][iPTT][iPTA]->GetTitle(),\"p\");\n\t\t\n\t\tleg->Draw();\n\n\t\t//==== Lower pad\n\t\tp = fpad->GetPad(2);\n\t\tp->SetTickx(); p->SetGridy(1); p->SetLogx(0), p->SetLogy(0); p->cd();\n\t\tTH2F *hfr1 = new TH2F(\"hfr1\",\" \", 100, lowx, highx, 10, lowIAA, highIAA);\n\t\thset( *hfr1, \"#Delta#eta\", \"AA/pp\",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.08,0.08, 510,505);\n\t\thfr1->Draw();\n\t\thIAADeltaEtaFlip[ic][iPTT][iPTA]->SetMarkerStyle(21);\n\t\thIAADeltaEtaFlip[ic][iPTT][iPTA]->Draw(\"p,same\");\n\t\t//gPad->GetCanvas()->SaveAs(Form(\"figs_svn/FigA4_v%d_modelcomparisonBest.eps\",i+2));\n\t}\n}"
 		],
 		"reverse": false,
@@ -390,7 +449,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -399,44 +458,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 37269,
+						"buffer_size": 37865,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11890,
-								11890
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 523.0,
-						"translation.y": 3741.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "z02.CalIAADeta.C",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 16926,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8193,
-								8296
+								4201,
+								4201
 							]
 						],
 						"settings":
@@ -445,10 +475,39 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2550.0,
+						"translation.y": 1239.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "z02.CalIAADeta.C",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17216,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1902,
+								1902
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 702.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -457,15 +516,44 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8956,
+						"buffer_size": 11316,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1462,
-								1462
+								734,
+								734
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 20.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "z03.ComparionsEP.C",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8904,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6717,
+								6727
 							]
 						],
 						"settings":
@@ -477,11 +565,98 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
+					"file": "z05.Comparisons_PbPb.C",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8312,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								231,
+								274
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1359.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "z04.Comparisons_pp.C",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5742,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1278,
+								1278
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 155.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "raa.C",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6749,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1736,
+								1736
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 351.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
 					"file": "include/JStringInfo.h",
 					"semi_transient": false,
 					"settings":
@@ -504,10 +679,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 318.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 7,
 					"type": "text"
 				}
 			]
@@ -556,7 +731,7 @@
 	"project": "iaa.sublime-project",
 	"replace":
 	{
-		"height": 1234.0
+		"height": 70.0
 	},
 	"save_all_on_build": true,
 	"select_file":

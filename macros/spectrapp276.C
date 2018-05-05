@@ -35,8 +35,8 @@ TFile *fPP[NPP];
 int iRef = 1;
 TString filePP[NPP] = {
 	"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp-1708_20180405-0222-2760GeV_LHC11a_p4_AOD113_noSDD.root",
-	"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-512_20180427-1104-LHC12f1a_Pythia_2760GeV.root", // 2.76TeV pp
-	"legotrain_JCIaa/data/JCIaa_legotrain_CF_pp_MC-521_20180503-1035-LHC12f1a_Pythia_2760GeV.root"
+	"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-527_20180505-0109-LHC12f1a_Pythia_2760GeV.root", // 2.76TeV pp
+	"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-528_20180505-0109-LHC12f1a_Pythia_2760GeV.root"
 };
 
 TString dirPP[NPP] = {
