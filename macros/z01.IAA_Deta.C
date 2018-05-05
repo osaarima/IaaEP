@@ -161,12 +161,14 @@ void runAMPT(){
 	};
 
 	TString filePP[NPP] = {
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-527_20180505-0109-LHC12f1a_Pythia_2760GeV.root", // kineOnly
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-528_20180505-0109-LHC12f1a_Pythia_2760GeV.root", // 2.76 ALICE pythia
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-529_20180505-0109-LHC12f1b_Phojet_2760GeV.root",
-		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-530_20180505-0109-LHC12f1b_Phojet_2760GeV.root"
-		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-515_20180427-1107-LHC17l3b_cent_woSDD.root", // 5TeV pp
-		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-516_20180427-1107-LHC17l3b_cent_woSDD.root" // 5TeV pp
+		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-527_20180505-0109-LHC12f1a_Pythia_2760GeV.root", // kineOnly
+		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-528_20180505-0109-LHC12f1a_Pythia_2760GeV.root", // 2.76 ALICE pythia
+		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-529_20180505-0109-LHC12f1b_Phojet_2760GeV.root",
+		//"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-530_20180505-0109-LHC12f1b_Phojet_2760GeV.root"
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-531_20180505-0110-LHC17l3b_cent_woSDD.root", // 5TeV pp
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-532_20180505-0110-LHC17l3b_cent_woSDD.root",// 5TeV pp
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-533_20180505-0110-LHC17l3b_fast.root",
+		"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-534_20180505-0110-LHC17l3b_fast.root"
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-CfgATLAS.root"
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF0-configSoftQCD.root"
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_GF1-configSoftQCD.root" // Gluon Filter
@@ -174,16 +176,18 @@ void runAMPT(){
 		//"legotrain_JCIaa/mc/JCIaaGF_pythia8230_pp2.76TeV_QF1-configSoftQCD.root" // Quark Filter
 	};
 	TString commentPP[NPP] = {
-		"LHC12f1a_Pythia_2760GeV_KineOnly",
-		"LHC12f1a_Pythia_2760GeV_Reco",
-		"LHC12f1b_Phojet_2760GeV_KineOnly",
-		"LHC12f1b_Phojet_2760GeV_Reco"
+		//"LHC12f1a_Pythia_2760GeV_KineOnly",
+		//"LHC12f1a_Pythia_2760GeV_Reco",
+		//"LHC12f1b_Phojet_2760GeV_KineOnly",
+		//"LHC12f1b_Phojet_2760GeV_Reco"
 		//"pythia8230_pp2.76TeV_GF1_SoftQCD"
 		//"pythia8230_pp2.76TeV_QF1_SoftQCD"
 		//"pythia8230_pp5.02TeV_GF0_SoftQCD"
 		//"LHC11a_p4_AOD113_noSDD"
-		//"LHC17p_pass1_CENT_woSDD_KineOnly",
-		//"LHC17p_pass1_CENT_woSDD_Reco"
+		"LHC17l3b_cent_woSDD_KineOnly",
+		"LHC17l3b_cent_woSDD_Reco",
+		"LHC17l3b_fast_KineOnly",
+		"LHC17l3b_fast_Reco"
 		//"LHC12f1a_Pythia_2760GeV",
 		//"LHC12f1b_Phojet_2760GeV"
 	};
@@ -193,8 +197,8 @@ void runAMPT(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<NAA;iA++) { // NAA
-		for(int iP=0;iP<1;iP++) {
+	for(int iA=0;iA<1;iA++) { // NAA
+		for(int iP=0;iP<NPP;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
 					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],dirPP[iP],commentAA[iA]+"_"+dirAA[iA]+"_"+commentPP[iP] );

@@ -14,15 +14,15 @@ double lowIAA = -0.2;
 double highIAA = 2.2;
 
 TLatex latexRun;
-//TString strRun = "pp #sqrt{#it{s}} = 5.02 TeV";
-TString strRun = "pp #sqrt{#it{s}} = 2.76 TeV";
+TString strRun = "pp #sqrt{#it{s}} = 5.02 TeV";
+//TString strRun = "pp #sqrt{#it{s}} = 2.76 TeV";
 
 const int Nsets = 2;
 TString infiles[Nsets] = {
-	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
-	//"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	//"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	//"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	//"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_cent_woSDD_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_cent_woSDD_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
 TFile *fin[Nsets];
 
@@ -146,5 +146,6 @@ void DrawPP(int padID, int iPTT, int iPTA) {
 		for(int i=0;i<Nsets;i++){
 			hRatiosPP[i]->Draw("p,same");
 		}
-		gPad->GetCanvas()->SaveAs(Form("figs_iaa/DeltaEta_MCCloser_pp276_T%02dA%02d.pdf",iPTT,iPTA));
+		//gPad->GetCanvas()->SaveAs(Form("figs_iaa/DeltaEta_MCCloser_pp276_T%02dA%02d.pdf",iPTT,iPTA));
+		gPad->GetCanvas()->SaveAs(Form("figs_iaa/DeltaEta_MCCloser_pp5TeV_T%02dA%02d.pdf",iPTT,iPTA));
 	}

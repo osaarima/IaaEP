@@ -29,8 +29,8 @@ TH1D *hChargedPtPPOnly_Ratio[NPP];
 TFile *fPP[NPP];
 int iRef = 0;
 TString filePP[NPP] = {
-	"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-515_20180427-1107-LHC17l3b_cent_woSDD.root", // 5TeV pp
-	"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-516_20180427-1107-LHC17l3b_cent_woSDD.root", // 5TeV pp
+	"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-531_20180505-0110-LHC17l3b_cent_woSDD.root", // 5TeV pp kineonly
+	"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp_MC-532_20180505-0110-LHC17l3b_cent_woSDD.root", // 5TeV pp reco
 	"legotrain_JCIaa/data/JCIaaJt_legotrain_CF_pp-1773_20180423-1806-LHC17p_pass1_CENT_woSDD.root"
 };
 
@@ -64,7 +64,7 @@ void LoadPP() {
 		//if(i==2 || i==3 ) hiCentrpp = (TH1D *)fPP[1]->Get(Form("%s/AliJHistos/hiCentr",dirPP[1].Data()));
 		noEventspp = hiCentrpp->GetBinContent(1); // with vertex cut
 		cout << i<<"\t"<< dirPP[i] << "\t"<< noEventspp << endl;
-		hChargedPtPPOnly[i]->Scale(1./noEventspp/sc,"width");
+		hChargedPtPPOnly[i]->Scale(1./noEventspp/sc);
 	}
 }
 

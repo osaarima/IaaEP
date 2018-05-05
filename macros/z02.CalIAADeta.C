@@ -53,8 +53,12 @@ TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
 void run2() {
 
-	const int Nsets = 25;
+	const int Nsets = 29;
 	TString infiles[Nsets] = {
+		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_cent_woSDD_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_cent_woSDD_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_fast_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC17l3b_fast_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Reco_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 		"sysErrors/_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
@@ -91,7 +95,7 @@ void run2() {
 		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
 		//cout << outrootname[i] << endl;
 	}
-	for(int i=0;i<6;i++) { 
+	for(int i=0;i<4;i++) { 
 		DoAnalysis(infiles[i],outrootname[i]);
 	}
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");
