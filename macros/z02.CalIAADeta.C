@@ -91,7 +91,7 @@ void run2() {
 		outrootname[i] = Form("%s/Signal%s",sDir.Data(),sName.Data());
 		//cout << outrootname[i] << endl;
 	}
-	for(int i=0;i<4;i++) { 
+	for(int i=0;i<6;i++) { 
 		DoAnalysis(infiles[i],outrootname[i]);
 	}
 //	DoAnalysis ("sysErrors/_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root","sysErrors/_Signal_AA_moon1_pp_moon1_Iaa_R0.2_1.0_1.60_Near_Wing0.root");

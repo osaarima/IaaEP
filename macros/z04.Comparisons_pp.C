@@ -16,17 +16,15 @@ double highIAA = 2.2;
 TLatex latexRun;
 TString strRun = "pp #sqrt{#it{s}} = 2.76 TeV";
 
-const int Nsets = 6;
+const int Nsets = 7;
 TString infiles[Nsets] = {
 	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_GF1_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_pythia8230_pp2.76TeV_QF1_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	//"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	//"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	//"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
-	"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1b_Phojet_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_LHC15o_GlobalSDD_JCIAA_GlobalSDD_pythia8230_pp5.02TeV_GF0_SoftQCD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
 TFile *fin[Nsets];
 
@@ -35,11 +33,9 @@ TString sLeg[Nsets] = {
 	"pythia8230 SoftQCD",
 	"pythia8230 SoftQCD, Gluon Filtering",
 	"pythia8230 SoftQCD, Quark Filtering",
-	//"LHC12f1a_Pythia",
-	//"LHC12f1b_Phojet",
-	"pythia8230 SoftQCD, #sqrt{#it{s}} = 5.02 TeV",
-	"pythia ALICE, #sqrt{#it{s}} = 5.02 TeV"
-
+	"LHC12f1a_Pythia",
+	"LHC12f1b_Phojet",
+	"pythia8230 SoftQCD, #sqrt{#it{s}} = 5.02 TeV"
 };
 
 int gMarkers[] = {20,24,21,25,23,27,29,30};
@@ -62,7 +58,7 @@ TVector *CentBinBorders;
 int NumCent[2];
 int NPTT;
 int NPTA;
-int iRef=3; // data:
+int iRef=1; // data:
 
 //------------------------------------------------------------------------------------------------
 void LoadData() {
