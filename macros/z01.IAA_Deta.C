@@ -193,8 +193,8 @@ void runAMPT(){
 	double dR[NR] = {0.2};
 	double BgRbegin[1] = {1.0};
 	int NBG=1;
-	for(int iA=0;iA<1;iA++) { // NAA
-		for(int iP=0;iP<NPP;iP++) {
+	for(int iA=0;iA<NAA;iA++) { // NAA
+		for(int iP=0;iP<1;iP++) {
 			for(int iR=0;iR<NR;iR++){
 				for( int iB=0;iB<NBG;iB++){
 					DoAnalysis( dR[iR], BgRbegin[iB], 1.6, 1, 0, fileAA[iA],filePP[iP],dirAA[iA],dirPP[iP],commentAA[iA]+"_"+dirAA[iA]+"_"+commentPP[iP] );
