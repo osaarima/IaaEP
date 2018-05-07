@@ -8,7 +8,7 @@ void DrawPP(int padID, int iPTT, int iPTA);
 void DrawIAA(int padID, int iPTT, int iPTA);
 
 double lowx=-0.8;
-double highx=0.8;
+double highx=0.85;
 double ly = -0.05;
 double hy = 0.3;
 double lowIAA = -0.2;
@@ -17,10 +17,11 @@ double highIAA = 2.2;
 TLatex latexRun;
 TString strRun = "Pb-Pb #sqrt{#it{s}_{NN}} = 2.76 TeV";
 
-const int Nsets = 4;
+const int Nsets = 5;
 TString infiles[Nsets] = {
 	"sysErrors/Signal_LHC10h_AOD86_MgFpMgFm_5217_JCIAA_TPCOnly_H0_T0_LHC11a_p4_AOD113_noSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_AMPT_LHC13f3c_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
+	"sysErrors/Signal_AMPT_LHC13f3a_JCIAA_EPInclusive_LHC12f1a_Pythia_2760GeV_KineOnly_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5175_JCIAA_TPCOnly_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root",
 	"sysErrors/Signal_LHC15o_pass1_CentralBarrelTracking_hadronPID_FieldConfigs_5146_JCIAA_GlobalSDD_LHC17p_pass1_CENT_woSDD_Iaa_R0.2_1.0_1.60_Near_Wing0.root"
 };
@@ -29,6 +30,7 @@ TFile *fin[Nsets];
 TString sLeg[Nsets] = {
 	"LHC10h",
 	"AMPT String melting",
+	"AMPT String melting w/o hardronic rescattering",
 	"15o, TPCOnly",
 	"15o, GlobalSDD"
 };
@@ -106,8 +108,8 @@ void Compare(){
 	int ic=0;
 	for(int iptt=3; iptt<NPTT; iptt++){
 		for(int ipta=1;ipta<NPTA;ipta++) {
-			//DrawSignal(ic++, iptt, ipta);
-			DrawIAA(ic++, iptt, ipta);
+			DrawSignal(ic++, iptt, ipta);
+			//DrawIAA(ic++, iptt, ipta);
 	 	}
 	}
 
@@ -124,12 +126,12 @@ void DrawSignal(int padID, int iPTT, int iPTA) {
 		//==== Upper pad
 		TPad *p = fpad[ic]->GetPad(1); //upper pad
 		p->SetTickx(); p->SetLogx(0); p->SetLogy(0); p->cd();
-		hy = hDeltaEtaSig[2][AA][ic][iPTT][iPTA]->GetMaximum()*1.2;
+		hy = hDeltaEtaSig[2][AA][ic][iPTT][iPTA]->GetMaximum()*1.5;
 		TH2F *hfr = new TH2F("hfr"," ", 100,lowx, highx, 10, ly, hy); // numbers: tics x, low limit x, upper limit x, tics y, low limit y, upper limit y
 		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d|#Delta#eta|",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 		hfr->Draw();
 		//Legend definition
-		TLegend *leg = new TLegend(0.45,0.4,0.85,0.78,"","brNDC");
+		TLegend *leg = new TLegend(0.35,0.4,0.85,0.78,"","brNDC");
 		leg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;
 
 		latexRun.DrawLatexNDC( 0.25, 0.85 ,strRun);
