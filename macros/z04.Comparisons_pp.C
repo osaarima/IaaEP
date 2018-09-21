@@ -14,7 +14,7 @@ double lowIAA = -0.2;
 double highIAA = 2.2;
 
 TLatex latexRun;
-TString strRun = "pp #sqrt{#it{s}} = 2.76 TeV";
+TString strRun = "PYTHIA #sqrt{#it{s}} = 2.76 TeV";
 
 const int Nsets = 4;
 TString infiles[Nsets] = {
@@ -31,9 +31,9 @@ TFile *fin[Nsets];
 
 TString sLeg[Nsets] = {
 	"data",
-	"pythia8230 SoftQCD",
-	"pythia8230 SoftQCD, Gluon Filtering",
-	"pythia8230 SoftQCD, Quark Filtering"
+	"SoftQCD",
+	"SoftQCD, Gluon Filtering",
+	"SoftQCD, Quark Filtering"
 	//"LHC12f1a_Pythia",
 	//"LHC12f1b_Phojet",
 	//"pythia8230 SoftQCD, #sqrt{#it{s}} = 5.02 TeV",
@@ -172,10 +172,10 @@ void DrawGF(int padID, int iPTT, int iPTA) {
 		hset( *hfr, "|#Delta#eta|", "1/N_{trigg} dN/d|#Delta#eta|",1.1,1.0, 0.09,0.09, 0.01,0.01, 0.04,0.05, 510,505);//settings of the upper pad: x-axis, y-axis
 		hfr->Draw();
 		//Legend definition
-		TLegend *leg = new TLegend(0.45,0.4,0.85,0.78,"","brNDC");
+		TLegend *leg = new TLegend(0.45,0.5,0.85,0.78,"","brNDC");
 		leg->SetTextSize(0.037);leg->SetBorderSize(0);leg->SetFillStyle(0);//legend settings;
 
-		latexRun.DrawLatexNDC( 0.25, 0.85 ,strRun);
+		latexRun.DrawLatexNDC( 0.35, 0.85 ,strRun);
 
 		leg->AddEntry((TObject*)NULL,hDeltaEtaSig[0][pp][0][iPTT][iPTA]->GetTitle(),"");
 
@@ -203,5 +203,5 @@ void DrawGF(int padID, int iPTT, int iPTA) {
 		
 		hRatiosFilter[0]->Draw("p,same");
 		hRatiosFilter[1]->Draw("p,same");
-		gPad->GetCanvas()->SaveAs(Form("figs_iaa/DeltaEta_GF_T%02dA%02d.pdf",iPTT,iPTA));
+		gPad->GetCanvas()->SaveAs(Form("figs_iaa/Pythia8_DeltaEta_GF_T%02dA%02d.pdf",iPTT,iPTA));
 	}
