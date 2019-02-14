@@ -4,3 +4,10 @@ macros/legotrain_JCIaa
 macros/figs_iaa
 
 macros/figs_iaa/DeltaEta_ppComparison_T03A01.pdf
+
+# Ignore .swp .swo
+.*.swp
+.*.swo
+
+# Ignore .root files
+*.root
